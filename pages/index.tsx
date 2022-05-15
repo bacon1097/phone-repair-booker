@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import Button from "../components/Button";
 import Title from "../components/Title";
@@ -21,7 +20,7 @@ const Home: NextPage = () => {
           Get Phone Repaired
         </Button>
       </div>
-      <Image src={"/curly-arrow.svg"} alt="arrow" width={250} height={250} layout="intrinsic" />
+      <img src={"./curly-arrow.svg"} alt="arrow" width={250} height={250} />
     </div>
   );
 };

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
     "lint": "next lint"
   },
@@ -12,6 +12,8 @@
     "clsx": "^1.1.1",
     "firebase": "^9.8.1",
     "next": "12.1.6",
+    "next-compose-plugins": "^2.2.1",
+    "next-optimized-images": "^2.6.2",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "sass": "^1.51.0"
@@ -23,6 +25,16 @@
     "@types/react-dom": "18.0.4",
     "eslint": "8.15.0",
     "eslint-config-next": "12.1.6",
-    "typescript": "4.6.4"
+    "image-trace-loader": "^1.0.2",
+    "imagemin-gifsicle": "^7.0.0",
+    "imagemin-mozjpeg": "^10.0.0",
+    "imagemin-optipng": "^8.0.0",
+    "imagemin-svgo": "^10.0.1",
+    "jimp": "^0.16.1",
+    "lqip-loader": "^2.2.1",
+    "responsive-loader": "^2.3.0",
+    "svg-sprite-loader": "^6.0.11",
+    "typescript": "4.6.4",
+    "webp-loader": "^0.6.0"
   }
 }
