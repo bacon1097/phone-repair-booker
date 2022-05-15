@@ -1,0 +1,20 @@
+@import "../../styles/variables";
+
+.modalContainer {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: $spacingLarge;
+  background-color: rgba(0, 0, 0, 0.2);
+  height: 100%;
+  width: 100%;
+}
+
+.Modal {
+  background-color: white;
+  border: 3px solid black;
+  box-shadow: 4px 4px 0 black;
+  padding: $spacingMedium;
+}

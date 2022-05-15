@@ -1,0 +1,8 @@
+@import "../../styles/variables";
+
+.StyledContainer {
+  padding: $spacingMedium;
+  background-color: $btn-secondary;
+  border: 3px solid black;
+  box-shadow: 4px 4px 0 black;
+}

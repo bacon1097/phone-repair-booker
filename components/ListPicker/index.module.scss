@@ -1,0 +1,15 @@
+@import "../../styles/variables";
+
+.PhonePicker {
+  > * {
+    margin-bottom: $spacingSmall;
+  }
+
+  > :last-child {
+    margin-bottom: unset;
+  }
+
+  .container {
+    padding: $spacingSmall;
+  }
+}

@@ -1,0 +1,72 @@
+@import "../variables";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: $spacingLarge;
+  height: 100%;
+
+  > * {
+    margin-bottom: $spacingMedium;
+  }
+
+  > :last-child {
+    margin-bottom: unset;
+  }
+}
+
+.OptionTitle {
+  font-size: 24px;
+}
+
+.optionContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+
+  .checkIcon {
+    stroke: black;
+    stroke-width: 0.5px;
+    color: #00ff19;
+  }
+
+  .optionContent {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .optionValue {
+    color: #c59c9c;
+    font-size: 15px;
+  }
+}
+
+.caption {
+  text-align: center;
+}
+
+.modal {
+  width: 100%;
+}
+
+.modalContent {
+  max-height: 45vh;
+  overflow: auto;
+}
+
+.deliveryBtnContainer {
+  display: flex;
+  flex-direction: column;
+
+  > * {
+    margin-bottom: $spacingMedium;
+  }
+
+  > :last-child {
+    margin-bottom: unset;
+  }
+}

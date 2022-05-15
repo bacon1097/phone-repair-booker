@@ -1,0 +1,21 @@
+@import "../../styles/variables";
+
+.Button {
+  border: 3px solid black;
+  box-shadow: 4px 4px 0 black;
+  background-color: $btn-secondary;
+  padding: $spacingSmall $spacingLarge;
+  font-size: 24px;
+  letter-spacing: 1.7pt;
+  text-align: center;
+  cursor: pointer;
+
+  &.pressed {
+    box-shadow: unset;
+    transform: translate(4px, 4px);
+  }
+
+  &.cta {
+    background-color: $btn-primary;
+  }
+}

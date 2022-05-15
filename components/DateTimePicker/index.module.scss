@@ -1,0 +1,100 @@
+@import "../../styles/variables";
+
+.MonthHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacingMedium;
+
+  .month {
+    font-size: 32px;
+  }
+
+  .arrow {
+    color: $btn-secondary;
+  }
+}
+
+.MonthDays {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+
+  .dayFill {
+    width: calc((100% / 7) - 1px);
+    text-align: center;
+  }
+
+  .day {
+    color: $btn-primary;
+  }
+
+  .dayHeader {
+    font-size: 20px;
+  }
+}
+
+.TimePicker {
+  width: 100%;
+}
+
+.TimeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background-color: white;
+
+  .backArrow {
+    color: $btn-secondary;
+  }
+
+  .date {
+    font-size: 32px;
+  }
+}
+
+.TimeSlots {
+  display: flex;
+  flex-direction: column;
+
+  > * {
+    margin-bottom: $spacingMedium;
+  }
+
+  > :last-child {
+    margin-bottom: unset;
+  }
+}
+
+.TimeSlot {
+  .time {
+    display: flex;
+    align-items: center;
+    margin-bottom: $spacingMedium;
+
+    > :first-child {
+      margin-right: $spacingSmall;
+    }
+
+    .slotBar {
+      flex: 1;
+      height: 3px;
+      background-color: black;
+      border-radius: 100px;
+    }
+  }
+
+  .btnContainer {
+    padding-left: $spacingLarge;
+    box-sizing: border-box;
+
+    .takenSlot {
+      background-color: white;
+      box-shadow: unset;
+      text-align: center;
+      padding: $spacingSmall $spacingLarge;
+    }
+  }
+}
