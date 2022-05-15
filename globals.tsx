@@ -6,10 +6,10 @@ interface PhonePricingMapping {
 
 export const REPAIR_TYPES = [
   "screen",
-  "backCamera",
-  "frontCamera",
+  "back camera",
+  "front camera",
   "battery",
-  "backCameraGlass",
+  "back camera glass",
 ] as const;
 
 export const PHONE_PRICING: PhonePricingMapping = {
