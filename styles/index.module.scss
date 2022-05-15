@@ -1,12 +1,15 @@
+@import "./variables";
+
 .container {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   height: 100%;
+  padding: $spacingLarge;
 
   > * {
-    margin-bottom: 40px;
+    margin-bottom: $spacingLarge;
   }
 
   > :last-child {
@@ -20,7 +23,7 @@
     align-items: center;
 
     > * {
-      margin-bottom: 20px;
+      margin-bottom: $spacingMedium;
     }
 
     > :last-child {

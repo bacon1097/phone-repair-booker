@@ -244,7 +244,7 @@ const BookRepair = (): JSX.Element => {
               color: "#EA5454",
             }}
           >
-            07375090629
+            <a href="tel:07375090629">07375090629</a>
           </b>
           .
         </Caption>
