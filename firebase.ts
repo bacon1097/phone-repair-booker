@@ -5,7 +5,6 @@ import {
   getFirestore,
   initializeFirestore
 } from "firebase/firestore";
-import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 
 const DEV = process.env.NODE_ENV === "development";
 
@@ -22,9 +21,6 @@ const LOCAL = "localhost";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-export const functions = getFunctions(app);
-DEV && connectFunctionsEmulator(functions, LOCAL, 5001);
 
 initializeFirestore(app, {
   ignoreUndefinedProperties: true,

@@ -4,5 +4,8 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
+    match /bookings/{id} {
+      allow read, write: if true;
+    }
   }
 }

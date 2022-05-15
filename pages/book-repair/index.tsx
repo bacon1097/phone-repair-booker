@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import Button from "../../components/Button";
 import Caption from "../../components/Caption";
@@ -20,6 +21,8 @@ export interface RepairSelection {
 }
 
 const BookRepair = (): JSX.Element => {
+  const router = useRouter();
+
   // Options provided by the user
   const [selection, setSelection] = useState<Partial<RepairSelection>>({
     phone: "",
@@ -36,6 +39,9 @@ const BookRepair = (): JSX.Element => {
     "phone" | "repair-type" | "date" | "delivery-type" | undefined
   >();
 
+  // Error message
+  const [error, setError] = useState("");
+
   // Calculate the price everytime the selection is changed
   useEffect(() => {
     setTotalPrice(calculatePrice(selection));
@@ -46,8 +52,15 @@ const BookRepair = (): JSX.Element => {
     setModal(undefined);
   }, []);
 
+  useEffect(() => {
+    // Clear the error when the user performs an action
+    setError("");
+  }, [modal]);
+
   // Submit the booking
   const bookRepair = useCallback(async () => {
+    setError("");
+
     if (
       !(
         selection.date &&
@@ -57,16 +70,47 @@ const BookRepair = (): JSX.Element => {
       )
     ) {
       console.warn("Not all options have been selected");
+      setError("Please select your options");
       return;
     }
 
-    await addDoc(collection(db, "bookings"), {
-      date: selection.date,
-      deliveryType: selection.deliveryType,
-      phone: selection.phone,
-      repairType: selection.repairType,
+    let docId = "";
+
+    try {
+      const existingDocs = await getDocs(
+        query(collection(db, "bookings"), where("date", "==", selection.date))
+      );
+
+      if (!existingDocs.empty) {
+        setError("Slot taken, select another time");
+        return;
+      }
+
+      docId = (
+        await addDoc(collection(db, "bookings"), {
+          date: selection.date,
+          deliveryType: selection.deliveryType,
+          phone: selection.phone,
+          repairType: selection.repairType,
+        })
+      ).id;
+
+      if (!docId) {
+        throw new Error("Could not get document ID");
+      }
+    } catch (e) {
+      console.error(e);
+      setError("Failed to book time slot, please try again");
+      return;
+    }
+
+    router.push({
+      pathname: "success",
+      query: {
+        id: docId,
+      },
     });
-  }, [selection]);
+  }, [selection, router]);
 
   // Modals depending on the option clicked
   const getModal = useCallback((): JSX.Element => {
@@ -191,6 +235,7 @@ const BookRepair = (): JSX.Element => {
         <Button type="cta" onClick={bookRepair}>
           Book
         </Button>
+        {error && <span className={styles.errorMessage}>{error}</span>}
         <Caption className={styles.caption}>
           All repairs will take a minimum of 3 days to complete. If you need
           your repair within the hour, please call{" "}
@@ -208,11 +253,12 @@ const BookRepair = (): JSX.Element => {
   );
 };
 
+// ! TODO: Implement
 const calculatePrice = (selection: Partial<RepairSelection>) => {
   return 0;
 };
 
-const formatDate = (date: Date) => {
+export const formatDate = (date: Date) => {
   return `${("0" + date.getHours()).slice(-2)}:${(
     "0" + date.getMinutes()
   ).slice(-2)} - ${getOrdinalNum(date.getDate())} ${date.toLocaleString(

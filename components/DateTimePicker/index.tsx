@@ -1,7 +1,10 @@
 import { Icon } from "@iconify/react";
 import clsx from "clsx";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
+import { db } from "../../firebase";
 import { AVAILABLE_END_TIME, AVAILABLE_START_TIME } from "../../globals";
+import { RepairSelection } from "../../pages/book-repair";
 import Button from "../Button";
 import StyledContainer from "../StyledContainer";
 import styles from "./index.module.scss";
@@ -22,6 +25,9 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
   const [dayStart, setDayStart] = useState(TODAY.getDay());
   const [dayCount, setDayCount] = useState(focussedDate.getDate());
   const [view, setView] = useState<"month" | "day">("month");
+  const [error, setError] = useState("");
+  const [existingEntries, setExistingEntries] = useState<RepairSelection[]>([]);
+  const [takenSlots, setTakenSlots] = useState<string[]>(["09:00"]);
 
   useEffect(() => {
     const tempDate1 = new Date(focussedDate);
@@ -35,6 +41,59 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
     );
     setDayCount(tempDate2.getDate());
   }, [focussedDate]);
+
+  useEffect(() => {
+    setTakenSlots(
+      existingEntries
+        .filter((entry) => {
+          const tempDate1 = new Date(entry.date);
+          tempDate1.setHours(0);
+          tempDate1.setMinutes(0);
+          tempDate1.setSeconds(0);
+          tempDate1.setMilliseconds(0);
+
+          const tempDate2 = new Date(focussedDate);
+          tempDate2.setHours(0);
+          tempDate2.setMinutes(0);
+          tempDate2.setSeconds(0);
+          tempDate2.setMilliseconds(0);
+
+          return tempDate1.valueOf() === tempDate2.valueOf();
+        })
+        .reduce<string[]>((r, entry) => {
+          r.push(
+            `${("0" + entry.date.getHours()).slice(-2)}:${(
+              "0" + entry.date.getMinutes()
+            ).slice(-2)}`
+          );
+
+          return r;
+        }, [])
+    );
+  }, [focussedDate, existingEntries]);
+
+  useEffect(() => {
+    const onLoad = async () => {
+      try {
+        const entries = await getDocs(
+          query(collection(db, "bookings"), where("date", ">=", new Date()))
+        );
+
+        const existingEntriesRes = entries.docs.map((entry) => {
+          const data = entry.data();
+          return {
+            ...data,
+            date: data.date.toDate(),
+          };
+        });
+        setExistingEntries(existingEntriesRes as RepairSelection[]);
+      } catch (e) {
+        setError("Failed to load taken time slots");
+      }
+    };
+
+    onLoad();
+  }, []);
 
   const goBackMonth = useCallback(() => {
     setFocussedDate((curDate) => {
@@ -52,6 +111,10 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
     });
   }, []);
 
+  if (error) {
+    return <span>{error}</span>;
+  }
+
   return (
     <div className={clsx(styles.DateTimePicker, className)} {...props}>
       {view === "month" && (
@@ -62,6 +125,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
             })} - ${focussedDate.getFullYear()}`}
             onLeftArrowClick={goBackMonth}
             onRightArrowClick={goForwardMonth}
+            showLeftArrow={focussedDate.getMonth() !== new Date().getMonth()}
           />
           <MonthDays
             onSelect={(day) => {
@@ -76,6 +140,12 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
             }}
             dayCount={dayCount}
             dayStart={dayStart}
+            hideDays={
+              // If current month then hide all days up to the current date
+              focussedDate.getMonth() === new Date().getMonth()
+                ? new Date().getDate()
+                : 0
+            }
           />
         </>
       )}
@@ -83,6 +153,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
         <>
           <TimePicker
             date={focussedDate}
+            takenSlots={takenSlots}
             onBack={() => setView("month")}
             onSelect={(time) => {
               const hour = parseInt(time.slice(0, 2));
@@ -114,22 +185,26 @@ interface MonthHeaderProps {
   month: string;
   onLeftArrowClick: () => void;
   onRightArrowClick: () => void;
+  showLeftArrow?: boolean;
 }
 
 // Top section of the calendar
 const MonthHeader = ({
   month,
+  showLeftArrow = true,
   onLeftArrowClick,
   onRightArrowClick,
 }: MonthHeaderProps): JSX.Element => {
   return (
     <div className={styles.MonthHeader}>
-      <Icon
-        icon="fluent:arrow-left-12-filled"
-        height={15}
-        className={styles.arrow}
-        onClick={onLeftArrowClick}
-      />
+      {showLeftArrow && (
+        <Icon
+          icon="fluent:arrow-left-12-filled"
+          height={15}
+          className={styles.arrow}
+          onClick={onLeftArrowClick}
+        />
+      )}
       <span className={styles.month}>{month}</span>
       <Icon
         icon="fluent:arrow-right-12-filled"
@@ -145,14 +220,16 @@ interface MonthDaysProps {
   onSelect?: (day: number) => void;
   dayStart: number;
   dayCount: number;
+  hideDays: number;
 }
 
 const MonthDays = ({
   dayCount,
   dayStart,
+  hideDays,
   onSelect = () => {},
 }: MonthDaysProps): JSX.Element => {
-  const days = new Array(dayCount).fill(0);
+  const days = new Array(dayCount - hideDays).fill(0);
 
   return (
     <div className={styles.MonthDays}>
@@ -163,18 +240,18 @@ const MonthDays = ({
       <div className={clsx(styles.dayFill, styles.dayHeader)}>Fri</div>
       <div className={clsx(styles.dayFill, styles.dayHeader)}>Sat</div>
       <div className={clsx(styles.dayFill, styles.dayHeader)}>Sun</div>
-      {new Array(dayStart).fill(0).map((elem, i) => {
+      {new Array(dayStart + hideDays).fill(0).map((elem, i) => {
         return <div key={i} className={styles.dayFill}></div>;
       })}
       {days.map((elem, i) => (
         <div
-          key={i + 1}
+          key={i + hideDays + 1}
           onClick={() => {
-            onSelect(i + 1);
+            onSelect(i + hideDays + 1);
           }}
           className={clsx(styles.dayFill, styles.day)}
         >
-          <span>{i + 1}</span>
+          <span>{i + hideDays + 1}</span>
         </div>
       ))}
     </div>
@@ -185,12 +262,14 @@ interface TimePickerProps {
   date: Date;
   onBack?: () => void;
   onSelect: (time: string) => void;
+  takenSlots?: string[];
 }
 
 const TimePicker = ({
   date,
   onBack,
   onSelect,
+  takenSlots = [],
 }: TimePickerProps): JSX.Element => {
   const month = date.toLocaleString("default", { month: "short" });
   const dateNum = date.getDate();
@@ -198,7 +277,7 @@ const TimePicker = ({
   return (
     <div className={styles.TimePicker}>
       <TimeHeader onBack={onBack} month={month} date={dateNum} />
-      <TimeSlots onSelect={onSelect} />
+      <TimeSlots onSelect={onSelect} takenSlots={takenSlots} />
     </div>
   );
 };
@@ -229,9 +308,13 @@ const TimeHeader = ({ month, date, onBack }: TimeHeader): JSX.Element => {
 
 interface TimeSlotsProps {
   onSelect: (time: string) => void;
+  takenSlots: string[];
 }
 
-const TimeSlots = ({ onSelect }: TimeSlotsProps): JSX.Element => {
+const TimeSlots = ({
+  onSelect,
+  takenSlots = [],
+}: TimeSlotsProps): JSX.Element => {
   const timeSlots = getTimeSlots();
 
   return (
@@ -239,7 +322,7 @@ const TimeSlots = ({ onSelect }: TimeSlotsProps): JSX.Element => {
       {timeSlots.map((slot, i) => (
         <TimeSlot
           key={i}
-          available={i % 2 === 0}
+          available={!takenSlots.includes(slot)}
           time={slot}
           onSelect={() => onSelect(slot)}
         />

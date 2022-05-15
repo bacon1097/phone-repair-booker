@@ -1,0 +1,90 @@
+[debug] [2022-05-15T18:21:04.105Z] ----------------------------------------------------------------------
+[debug] [2022-05-15T18:21:04.106Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\bruny\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start
+[debug] [2022-05-15T18:21:04.107Z] CLI Version:   10.9.2
+[debug] [2022-05-15T18:21:04.107Z] Platform:      win32
+[debug] [2022-05-15T18:21:04.107Z] Node Version:  v16.13.2
+[debug] [2022-05-15T18:21:04.108Z] Time:          Sun May 15 2022 19:21:04 GMT+0100 (British Summer Time)
+[debug] [2022-05-15T18:21:04.108Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-05-15T18:21:04.152Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-05-15T18:21:04.152Z] > authorizing via signed-in user (brunyeeb@gmail.com)
+[debug] [2022-05-15T18:21:04.222Z] java version "18.0.1" 2022-04-19
+Java(TM) SE Runtime Environment (build 18.0.1+10-24)
+
+[debug] [2022-05-15T18:21:04.222Z] Java HotSpot(TM) 64-Bit Server VM (build 18.0.1+10-24, mixed mode, sharing)
+
+[debug] [2022-05-15T18:21:04.241Z] Parsed Java major version: 18
+[info] i  emulators: Starting emulators: auth, firestore {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, firestore"}}
+[debug] [2022-05-15T18:21:04.260Z] [hub] writing locator at C:\Users\bruny\AppData\Local\Temp\hub-phone-repair-booker.json
+[debug] [2022-05-15T18:21:04.268Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2022-05-15T18:21:04.268Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2022-05-15T18:21:04.268Z] Starting Firestore Emulator with command {"binary":"java","args":["-Dgoogle.cloud_firestore.debug_log_level=FINE","-Duser.language=en","-jar","C:\\Users\\bruny\\.cache\\firebase\\emulators\\cloud-firestore-emulator-v1.14.3.jar","--host","localhost","--port",8080,"--rules","D:\\Documents\\phone-repair-booker\\firestore.rules"],"optionalArgs":["port","webchannel_port","host","rules","functions_emulator","seed_from_export"],"joinArgs":false} {"metadata":{"emulator":{"name":"firestore"},"message":"Starting Firestore Emulator with command {\"binary\":\"java\",\"args\":[\"-Dgoogle.cloud_firestore.debug_log_level=FINE\",\"-Duser.language=en\",\"-jar\",\"C:\\\\Users\\\\bruny\\\\.cache\\\\firebase\\\\emulators\\\\cloud-firestore-emulator-v1.14.3.jar\",\"--host\",\"localhost\",\"--port\",8080,\"--rules\",\"D:\\\\Documents\\\\phone-repair-booker\\\\firestore.rules\"],\"optionalArgs\":[\"port\",\"webchannel_port\",\"host\",\"rules\",\"functions_emulator\",\"seed_from_export\"],\"joinArgs\":false}"}}
+[info] i  firestore: Firestore Emulator logging to firestore-debug.log {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator logging to \u001b[1mfirestore-debug.log\u001b[22m"}}
+[debug] [2022-05-15T18:21:09.341Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2022-05-15T18:21:09.341Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2022-05-15T18:21:09.341Z] Starting Emulator UI with command {"binary":"node","args":["C:\\Users\\bruny\\.cache\\firebase\\emulators\\ui-v1.7.0\\server.bundle.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"C:\\\\Users\\\\bruny\\\\.cache\\\\firebase\\\\emulators\\\\ui-v1.7.0\\\\server.bundle.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2022-05-15T18:21:09.427Z] Web / API server started at localhost:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at localhost:4000\n"}}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://localhost:4000                │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┬─────────────────────────────────┐
+│ Emulator       │ Host:Port      │ View in Emulator UI             │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Authentication │ localhost:9099 │ http://localhost:4000/auth      │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Firestore      │ localhost:8080 │ http://localhost:4000/firestore │
+└────────────────┴────────────────┴─────────────────────────────────┘
+  Emulator Hub running at localhost:4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2022-05-15T18:22:30.841Z] >>> HTTP REQUEST PUT http://localhost:8080/emulator/v1/projects/phone-repair-booker:securityRules  
+ {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if false;\n    }\n    match /bookings/\n      allow read, write\n  }\n}"}]}}
+[debug] [2022-05-15T18:22:30.872Z] <<< HTTP RESPONSE 200 {"content-type":"application/json","content-length":"1026"}
+[warn] !  firestore.rules:7:11 - ERROR Missing 'match' keyword before path. 
+[warn] !  firestore.rules:7:20 - ERROR Forward slash '/' found where identifier or binding expected. 
+[warn] !  firestore.rules:8:7 - ERROR Unexpected 'allow'. 
+[warn] !  firestore.rules:8:7 - ERROR mismatched input 'allow' expecting {'{', '/', PATH_SEGMENT} 
+[info] +  firestore: Rules updated. 
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2022-05-15T18:22:43.961Z] >>> HTTP REQUEST PUT http://localhost:8080/emulator/v1/projects/phone-repair-booker:securityRules  
+ {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if false;\n    }\n    match /bookings/ {\n      allow read, write\n    }\n  }\n}"}]}}
+[debug] [2022-05-15T18:22:43.975Z] <<< HTTP RESPONSE 200 {"content-type":"application/json","content-length":"287"}
+[warn] !  firestore.rules:7:20 - ERROR Forward slash '/' found where identifier or binding expected. 
+[info] +  firestore: Rules updated. 
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2022-05-15T18:22:46.844Z] >>> HTTP REQUEST PUT http://localhost:8080/emulator/v1/projects/phone-repair-booker:securityRules  
+ {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if false;\n    }\n    match /bookings {\n      allow read, write\n    }\n  }\n}"}]}}
+[debug] [2022-05-15T18:22:46.858Z] <<< HTTP RESPONSE 200 {"content-type":"application/json","content-length":"4"}
+[info] +  firestore: Rules updated. 
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2022-05-15T18:22:59.539Z] >>> HTTP REQUEST PUT http://localhost:8080/emulator/v1/projects/phone-repair-booker:securityRules  
+ {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if false;\n    }\n    match /bookings {\n      allow read, write\n    }\n  }\n}"}]}}
+[debug] [2022-05-15T18:22:59.551Z] <<< HTTP RESPONSE 200 {"content-type":"application/json","content-length":"4"}
+[info] +  firestore: Rules updated. 
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2022-05-15T18:24:36.422Z] >>> HTTP REQUEST PUT http://localhost:8080/emulator/v1/projects/phone-repair-booker:securityRules  
+ {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if false;\n    }\n    match /bookings/{} {\n      allow read, write: if true;\n    }\n  }\n}"}]}}
+[debug] [2022-05-15T18:24:36.435Z] <<< HTTP RESPONSE 200 {"content-type":"application/json","content-length":"999"}
+[warn] !  firestore.rules:7:20 - ERROR Forward slash '/' found where identifier or binding expected. 
+[warn] !  firestore.rules:7:22 - ERROR The 'match' body must contain at least one declaration. 
+[warn] !  firestore.rules:7:24 - ERROR Unexpected '{'. 
+[warn] !  firestore.rules:11:1 - ERROR Unexpected '}'. 
+[info] +  firestore: Rules updated. 
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2022-05-15T18:24:38.997Z] >>> HTTP REQUEST PUT http://localhost:8080/emulator/v1/projects/phone-repair-booker:securityRules  
+ {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if false;\n    }\n    match /bookings {\n      allow read, write: if true;\n    }\n  }\n}"}]}}
+[debug] [2022-05-15T18:24:39.010Z] <<< HTTP RESPONSE 200 {"content-type":"application/json","content-length":"4"}
+[info] +  firestore: Rules updated. 
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2022-05-15T18:25:20.790Z] >>> HTTP REQUEST PUT http://localhost:8080/emulator/v1/projects/phone-repair-booker:securityRules  
+ {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if false;\n    }\n    match /bookings/{id} {\n      allow read, write: if true;\n    }\n  }\n}"}]}}
+[debug] [2022-05-15T18:25:20.804Z] <<< HTTP RESPONSE 200 {"content-type":"application/json","content-length":"4"}
+[info] +  firestore: Rules updated. 
