@@ -10,7 +10,12 @@ import Modal from "../../components/Modal";
 import StyledContainer from "../../components/StyledContainer";
 import Title from "../../components/Title";
 import { db } from "../../firebase";
-import { PHONE_MODELS, REPAIR_TYPES } from "../../globals";
+import {
+  PHONE_MODELS,
+  PHONE_PRICING,
+  PICK_UP_CHARGE,
+  REPAIR_TYPES
+} from "../../globals";
 import styles from "../../styles/book-repair/index.module.scss";
 
 export interface RepairSelection {
@@ -176,7 +181,7 @@ const BookRepair = (): JSX.Element => {
                   closeModal();
                 }}
               >
-                {"Pick-up (+£10)"}
+                {`Pick-up (+£${PICK_UP_CHARGE})`}
               </Button>
               <Button
                 type="default"
@@ -253,9 +258,31 @@ const BookRepair = (): JSX.Element => {
   );
 };
 
-// ! TODO: Implement
 const calculatePrice = (selection: Partial<RepairSelection>) => {
-  return 0;
+  let runningTotal = 0;
+
+  // Pick up charge
+  if (selection.deliveryType === "pick-up") {
+    runningTotal += PICK_UP_CHARGE;
+  }
+
+  // Phone needs to be present for any further calculations
+  if (
+    selection.phone &&
+    selection.repairType &&
+    PHONE_PRICING[selection.phone]?.[
+      selection.repairType as typeof REPAIR_TYPES[number]
+    ]
+  ) {
+    const price =
+      PHONE_PRICING[selection.phone]?.[
+        selection.repairType as typeof REPAIR_TYPES[number]
+      ];
+
+    return (runningTotal += price || 0);
+  }
+
+  return runningTotal;
 };
 
 export const formatDate = (date: Date) => {
