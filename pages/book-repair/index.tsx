@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { logEvent } from "firebase/analytics";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import Button from "../../components/Button";
@@ -162,11 +162,20 @@ const BookRepair = (): JSX.Element => {
           <Modal className={styles.modal} onClose={closeModal}>
             <Title>2. Repair Type</Title>
             <ListPicker
-              options={REPAIR_TYPES.map((repairType) => ({
-                key: repairType,
-                text: repairType,
-                value: repairType,
-              }))}
+              options={REPAIR_TYPES.map((repairType) => {
+                const hasPrice = selection.phone
+                  ? typeof PHONE_PRICING[selection.phone]?.[
+                      repairType as typeof REPAIR_TYPES[number]
+                    ] !== "undefined"
+                  : false;
+
+                return {
+                  key: repairType,
+                  text: repairType + (hasPrice ? "" : " - N/A"),
+                  value: repairType,
+                  selectable: hasPrice,
+                };
+              })}
               className={styles.modalContent}
               onSelection={(repairType) => {
                 setSelection((cur) => ({ ...cur, repairType }));
@@ -177,28 +186,16 @@ const BookRepair = (): JSX.Element => {
         );
       case "date":
         return (
-          <motion.div
-            animate="modalOpen"
-            variants={{
-              modalOpen: {
-                opacity: [0, 1],
-                transition: {
-                  duration: 0.2,
-                },
-              },
-            }}
-          >
-            <Modal className={styles.modal} onClose={closeModal}>
-              <Title>3. Date</Title>
-              <DateTimePicker
-                onSelection={(date) => {
-                  setSelection((cur) => ({ ...cur, date }));
-                  closeModal();
-                }}
-                className={styles.modalContent}
-              />
-            </Modal>
-          </motion.div>
+          <Modal className={styles.modal} onClose={closeModal}>
+            <Title>3. Date</Title>
+            <DateTimePicker
+              onSelection={(date) => {
+                setSelection((cur) => ({ ...cur, date }));
+                closeModal();
+              }}
+              className={styles.modalContent}
+            />
+          </Modal>
         );
       case "delivery-type":
         return (
@@ -235,11 +232,11 @@ const BookRepair = (): JSX.Element => {
       default:
         return <></>;
     }
-  }, [modal, closeModal]);
+  }, [modal, closeModal, selection]);
 
   return (
     <>
-      <AnimatePresence>{getModal()}</AnimatePresence>
+      {getModal()}
       <motion.div
         animate="pageAnimate"
         variants={{
@@ -317,18 +314,13 @@ const calculatePrice = (selection: Partial<RepairSelection>) => {
   }
 
   // Phone needs to be present for any further calculations
-  if (
-    selection.phone &&
-    selection.repairType &&
-    PHONE_PRICING[selection.phone]?.[
-      selection.repairType as typeof REPAIR_TYPES[number]
-    ]
-  ) {
-    const price =
-      PHONE_PRICING[selection.phone]?.[
-        selection.repairType as typeof REPAIR_TYPES[number]
-      ];
-
+  const price =
+    selection.phone && selection.repairType
+      ? PHONE_PRICING[selection.phone]?.[
+          selection.repairType as typeof REPAIR_TYPES[number]
+        ]
+      : undefined;
+  if (price) {
     return (runningTotal += price || 0);
   }
 

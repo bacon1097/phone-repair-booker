@@ -12,6 +12,7 @@ interface Option {
   key: string;
   text: string;
   value: any;
+  selectable?: boolean;
 }
 
 const ListPicker: React.FC<ListPickerProps> = ({
@@ -22,17 +23,23 @@ const ListPicker: React.FC<ListPickerProps> = ({
   ...props
 }) => {
   return (
-    <div className={clsx(styles.PhonePicker, className)} {...props}>
-      {options.map((option) => (
-        <StyledContainer
-          key={option.key}
-          className={styles.container}
-          onClick={() => onSelection(option.value)}
-          pressable
-        >
-          <span>{option.text}</span>
-        </StyledContainer>
-      ))}
+    <div className={clsx(styles.ListPicker, className)} {...props}>
+      {options.map((option) => {
+        option.selectable =
+          typeof option.selectable === "undefined" ? true : option.selectable;
+
+        return (
+          <StyledContainer
+            key={option.key}
+            className={styles.container}
+            onClick={() => option.selectable && onSelection(option.value)}
+            pressable={option.selectable}
+            background={option.selectable ? "default" : "white"}
+          >
+            <span>{option.text}</span>
+          </StyledContainer>
+        );
+      })}
     </div>
   );
 };

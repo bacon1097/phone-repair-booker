@@ -5,11 +5,13 @@ import styles from "./index.module.scss";
 export interface StyledContainerProps
   extends React.HTMLAttributes<HTMLDivElement> {
   pressable?: boolean;
+  background?: "default" | "white";
 }
 
 const StyledContainer: React.FC<StyledContainerProps> = ({
   className,
   pressable,
+  background = "default",
   ...props
 }) => {
   const [pressed, setPressed] = useState(false);
@@ -19,6 +21,7 @@ const StyledContainer: React.FC<StyledContainerProps> = ({
       className={clsx(styles.StyledContainer, className, {
         [styles.pressable]: pressable,
         [styles.pressed]: pressed,
+        [styles.white]: background === "white",
       })}
       {...props}
       onMouseDown={() => setPressed(true)}

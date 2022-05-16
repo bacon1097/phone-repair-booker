@@ -1,8 +1,9 @@
 @import "../../styles/variables";
 
-.PhonePicker {
+.ListPicker {
   // For the shadow of the last child
   padding-bottom: 4px;
+  overflow-x: hidden;
 
   > * {
     margin-bottom: $spacingMedium;

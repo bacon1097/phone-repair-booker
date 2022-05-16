@@ -11,32 +11,30 @@ const Modal: React.FC<ModalProps> = ({
   className,
   onClose = () => {},
   onClick = () => {},
-  ...props
+  children,
 }) => {
   return (
-    <motion.div
-      animate="modalOpen"
-      variants={{
-        modalOpen: {
-          opacity: [0, 1],
-          scale: [0.75, 1.05, 1],
-          transition: {
-            duration: 0.2,
-          },
-        },
-      }}
-      className={styles.modalContainer}
-      onClick={onClose}
-    >
-      <div
+    <div className={styles.modalContainer} onClick={onClose}>
+      <motion.div
         className={clsx(styles.Modal, className)}
-        {...props}
+        animate="modalOpen"
+        variants={{
+          modalOpen: {
+            opacity: [0, 1],
+            scale: [0.75, 1.05, 1],
+            transition: {
+              duration: 0.2,
+            },
+          },
+        }}
         onClick={(e) => {
           e.stopPropagation();
           onClick(e);
         }}
-      />
-    </motion.div>
+      >
+        {children}
+      </motion.div>
+    </div>
   );
 };
 
