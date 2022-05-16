@@ -1,4 +1,4 @@
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, isSupported } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import {
@@ -34,4 +34,6 @@ export const auth = getAuth(app);
 auth.languageCode = "it";
 DEV && connectAuthEmulator(auth, `http://${LOCAL}:9099`);
 
-export const analytics = getAnalytics(app);
+export const analytics = isSupported().then((yes) =>
+  yes ? getAnalytics(app) : null
+);
