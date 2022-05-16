@@ -69,7 +69,7 @@ const Success = (): JSX.Element => {
 
   if (!booking) {
     return (
-      <div>
+      <div className={styles.container}>
         <Title>Loading...</Title>
       </div>
     );

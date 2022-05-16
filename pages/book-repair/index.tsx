@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import { logEvent } from "firebase/analytics";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import Button from "../../components/Button";
@@ -80,6 +81,16 @@ const BookRepair = (): JSX.Element => {
       return;
     }
 
+    if (
+      !PHONE_PRICING[selection.phone]?.[
+        selection.repairType as typeof REPAIR_TYPES[number]
+      ]
+    ) {
+      console.warn("Pricing not set for repair");
+      setError("Pricing not set, please contact");
+      return;
+    }
+
     let docId = "";
 
     try {
@@ -111,7 +122,8 @@ const BookRepair = (): JSX.Element => {
     }
 
     const analytic = await analytics;
-    if (analytic) {
+    // Only log the event if we are in production
+    if (analytic && process.env.NODE_ENV === "production") {
       logEvent(analytic, "booking");
     }
 
@@ -121,6 +133,7 @@ const BookRepair = (): JSX.Element => {
         id: docId,
       },
     });
+    return;
   }, [selection, router]);
 
   // Modals depending on the option clicked
@@ -164,16 +177,28 @@ const BookRepair = (): JSX.Element => {
         );
       case "date":
         return (
-          <Modal className={styles.modal} onClose={closeModal}>
-            <Title>3. Date</Title>
-            <DateTimePicker
-              onSelection={(date) => {
-                setSelection((cur) => ({ ...cur, date }));
-                closeModal();
-              }}
-              className={styles.modalContent}
-            />
-          </Modal>
+          <motion.div
+            animate="modalOpen"
+            variants={{
+              modalOpen: {
+                opacity: [0, 1],
+                transition: {
+                  duration: 0.2,
+                },
+              },
+            }}
+          >
+            <Modal className={styles.modal} onClose={closeModal}>
+              <Title>3. Date</Title>
+              <DateTimePicker
+                onSelection={(date) => {
+                  setSelection((cur) => ({ ...cur, date }));
+                  closeModal();
+                }}
+                className={styles.modalContent}
+              />
+            </Modal>
+          </motion.div>
         );
       case "delivery-type":
         return (
@@ -183,7 +208,10 @@ const BookRepair = (): JSX.Element => {
               <Button
                 type="default"
                 onClick={() => {
-                  setSelection((cur) => ({ ...cur, deliveryType: "pick-up" }));
+                  setSelection((cur) => ({
+                    ...cur,
+                    deliveryType: "pick-up",
+                  }));
                   closeModal();
                 }}
               >
@@ -192,7 +220,10 @@ const BookRepair = (): JSX.Element => {
               <Button
                 type="default"
                 onClick={() => {
-                  setSelection((cur) => ({ ...cur, deliveryType: "drop-off" }));
+                  setSelection((cur) => ({
+                    ...cur,
+                    deliveryType: "drop-off",
+                  }));
                   closeModal();
                 }}
               >
@@ -208,8 +239,21 @@ const BookRepair = (): JSX.Element => {
 
   return (
     <>
-      {getModal()}
-      <div className={styles.container}>
+      <AnimatePresence>{getModal()}</AnimatePresence>
+      <motion.div
+        animate="pageAnimate"
+        variants={{
+          pageAnimate: {
+            opacity: [0, 1],
+            scale: [0.5, 1.05, 1],
+            transition: {
+              ease: "easeInOut",
+              duration: 0.4,
+            },
+          },
+        }}
+        className={styles.container}
+      >
         <Title>Details</Title>
         <Option
           number={1}
@@ -259,7 +303,7 @@ const BookRepair = (): JSX.Element => {
           </b>
           .
         </Caption>
-      </div>
+      </motion.div>
     </>
   );
 };

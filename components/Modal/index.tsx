@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { motion } from "framer-motion";
 import React from "react";
 import styles from "./index.module.scss";
 
@@ -13,7 +14,20 @@ const Modal: React.FC<ModalProps> = ({
   ...props
 }) => {
   return (
-    <div className={styles.modalContainer} onClick={onClose}>
+    <motion.div
+      animate="modalOpen"
+      variants={{
+        modalOpen: {
+          opacity: [0, 1],
+          scale: [0.75, 1.05, 1],
+          transition: {
+            duration: 0.2,
+          },
+        },
+      }}
+      className={styles.modalContainer}
+      onClick={onClose}
+    >
       <div
         className={clsx(styles.Modal, className)}
         {...props}
@@ -22,7 +36,7 @@ const Modal: React.FC<ModalProps> = ({
           onClick(e);
         }}
       />
-    </div>
+    </motion.div>
   );
 };
 

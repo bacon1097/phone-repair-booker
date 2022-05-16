@@ -1,12 +1,16 @@
 @import "../variables";
 
+.pageContainer,
 .container {
   display: flex;
+  height: 100%;
+}
+
+.container {
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: $spacingLarge;
-  height: 100%;
 
   > * {
     margin-bottom: $spacingMedium;

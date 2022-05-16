@@ -36,3 +36,8 @@ h6 {
   font-weight: normal;
   margin: unset;
 }
+
+// Hide the firebase emulator warning
+.firebase-emulator-warning {
+  display: none;
+}
