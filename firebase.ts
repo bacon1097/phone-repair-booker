@@ -16,6 +16,7 @@ const firebaseConfig = {
   storageBucket: "phone-repair-booker.appspot.com",
   messagingSenderId: "942482378332",
   appId: "1:942482378332:web:e1b4d94b93c6d34a282099",
+  measurementId: "G-T6MV2DJ1ZB",
 };
 
 const LOCAL = "localhost";

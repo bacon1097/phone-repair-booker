@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { logEvent } from "firebase/analytics";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
@@ -9,7 +10,7 @@ import ListPicker from "../../components/ListPicker";
 import Modal from "../../components/Modal";
 import StyledContainer from "../../components/StyledContainer";
 import Title from "../../components/Title";
-import { db } from "../../firebase";
+import { analytics, db } from "../../firebase";
 import {
   PHONE_MODELS,
   PHONE_PRICING,
@@ -107,6 +108,11 @@ const BookRepair = (): JSX.Element => {
       console.error(e);
       setError("Failed to book time slot, please try again");
       return;
+    }
+
+    const analytic = await analytics;
+    if (analytic) {
+      logEvent(analytic, "booking");
     }
 
     router.push({
@@ -322,7 +328,11 @@ const Option = ({
   onClick = () => {},
 }: OptionProps): JSX.Element => {
   return (
-    <StyledContainer className={styles.optionContainer} onClick={onClick} pressable>
+    <StyledContainer
+      className={styles.optionContainer}
+      onClick={onClick}
+      pressable
+    >
       <div className={styles.optionContent}>
         <OptionTitle number={number} text={title} />
         {value && <span className={styles.optionValue}>{value}</span>}
