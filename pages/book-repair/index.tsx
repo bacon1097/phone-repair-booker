@@ -322,7 +322,7 @@ const Option = ({
   onClick = () => {},
 }: OptionProps): JSX.Element => {
   return (
-    <StyledContainer className={styles.optionContainer} onClick={onClick}>
+    <StyledContainer className={styles.optionContainer} onClick={onClick} pressable>
       <div className={styles.optionContent}>
         <OptionTitle number={number} text={title} />
         {value && <span className={styles.optionValue}>{value}</span>}

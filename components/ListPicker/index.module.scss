@@ -1,8 +1,11 @@
 @import "../../styles/variables";
 
 .PhonePicker {
+  // For the shadow of the last child
+  padding-bottom: 4px;
+
   > * {
-    margin-bottom: $spacingSmall;
+    margin-bottom: $spacingMedium;
   }
 
   > :last-child {

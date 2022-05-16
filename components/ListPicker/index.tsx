@@ -28,6 +28,7 @@ const ListPicker: React.FC<ListPickerProps> = ({
           key={option.key}
           className={styles.container}
           onClick={() => onSelection(option.value)}
+          pressable
         >
           <span>{option.text}</span>
         </StyledContainer>
