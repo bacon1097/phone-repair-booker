@@ -54,6 +54,7 @@ const Success = (): JSX.Element => {
           deliveryType: data.deliveryType,
           phone: data.phone,
           repairType: data.repairType,
+          pickUpLocation: data.pickUpLocation,
         });
       } catch (e) {
         console.error(e);

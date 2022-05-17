@@ -121,7 +121,7 @@ const BookRepair = (): JSX.Element => {
           phone: selection.phone,
           repairType: selection.repairType,
           ...(selection.deliveryType === "pick-up" && {
-            address: selection.pickUpLocation,
+            pickUpLocation: selection.pickUpLocation,
           }),
         })
       ).id;
