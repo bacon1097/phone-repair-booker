@@ -4,6 +4,7 @@ import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
+import AddressForm, { Address } from "../../components/AddressForm";
 import Button from "../../components/Button";
 import Caption from "../../components/Caption";
 import DateTimePicker from "../../components/DateTimePicker";
@@ -26,6 +27,7 @@ export interface RepairSelection {
   repairType: string;
   date: Date;
   deliveryType: "pick-up" | "drop-off";
+  pickUpLocation: Address | undefined;
 }
 
 const BookRepair = (): JSX.Element => {
@@ -37,6 +39,7 @@ const BookRepair = (): JSX.Element => {
     repairType: "",
     date: undefined,
     deliveryType: undefined,
+    pickUpLocation: undefined,
   });
 
   // The total price displayed
@@ -44,7 +47,12 @@ const BookRepair = (): JSX.Element => {
 
   // The modal to be displayed
   const [modal, setModal] = useState<
-    "phone" | "repair-type" | "date" | "delivery-type" | undefined
+    | "phone"
+    | "repair-type"
+    | "date"
+    | "delivery-type"
+    | "pick-up-location"
+    | undefined
   >();
 
   // Error message
@@ -78,6 +86,12 @@ const BookRepair = (): JSX.Element => {
       return;
     }
 
+    if (selection.deliveryType === "pick-up" && !selection.pickUpLocation) {
+      console.warn("No pick-up address set");
+      setError("Please enter pick-up address");
+      return;
+    }
+
     if (
       !PHONE_PRICING[selection.phone]?.[
         selection.repairType as typeof REPAIR_TYPES[number]
@@ -106,6 +120,9 @@ const BookRepair = (): JSX.Element => {
           deliveryType: selection.deliveryType,
           phone: selection.phone,
           repairType: selection.repairType,
+          ...(selection.deliveryType === "pick-up" && {
+            address: selection.pickUpLocation,
+          }),
         })
       ).id;
 
@@ -231,6 +248,22 @@ const BookRepair = (): JSX.Element => {
             </div>
           </Modal>
         );
+      case "pick-up-location":
+        return (
+          <Modal className={styles.modal} onClose={closeModal}>
+            <Title>5. Pick-up Address</Title>
+            <AddressForm
+              onSave={(address) => {
+                console.log(address);
+                setSelection((cur) => ({
+                  ...cur,
+                  pickUpLocation: address,
+                }));
+                closeModal();
+              }}
+            />
+          </Modal>
+        );
       default:
         return <></>;
     }
@@ -341,14 +374,27 @@ const BookRepair = (): JSX.Element => {
           {...(selection.deliveryType && { check: true })}
           onClick={() => setModal("delivery-type")}
         />
+        {selection.deliveryType === "pick-up" && (
+          <Option
+            number={5}
+            title="Pick-up Address"
+            value={
+              selection.pickUpLocation
+                ? formatAddress(selection.pickUpLocation)
+                : ""
+            }
+            {...(selection.pickUpLocation && { check: true })}
+            onClick={() => setModal("pick-up-location")}
+          />
+        )}
         <span>{`Total: £${totalPrice}`}</span>
         <Caption className={styles.caption}>
           Payment to be taken after satisfactory repair.
         </Caption>
+        {error && <span className={styles.errorMessage}>{error}</span>}
         <Button type="cta" onClick={bookRepair}>
           Book
         </Button>
-        {error && <span className={styles.errorMessage}>{error}</span>}
         <Caption className={styles.caption}>
           All repairs will take a minimum of 3 days to complete. If you need
           your repair within the hour, please call{" "}
@@ -364,6 +410,10 @@ const BookRepair = (): JSX.Element => {
       </motion.div>
     </>
   );
+};
+
+const formatAddress = (address: Address): string => {
+  return `${address.address}, ${address.postcode}, ${address.city}`;
 };
 
 const calculatePrice = (selection: Partial<RepairSelection>) => {

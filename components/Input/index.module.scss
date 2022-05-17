@@ -1,0 +1,8 @@
+@import "../../styles/variables";
+
+.Input {
+  padding: $spacingSmall;
+  border: 3px solid black;
+  font-family: $caption-font;
+  font-size: 16px;
+}

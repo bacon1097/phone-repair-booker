@@ -1,0 +1,15 @@
+@import "../../styles/variables";
+
+.AddressForm {
+  display: flex;
+  flex-direction: column;
+
+  > * {
+    margin-bottom: $spacingMedium;
+  }
+
+  .error {
+    text-align: center;
+    color: #EA5454;
+  }
+}

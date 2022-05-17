@@ -1,23 +1,28 @@
 @import "../variables";
 
-.pageContainer,
-.container {
-  display: flex;
+.pageContainer {
   height: 100%;
 }
 
 .container {
+  display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   padding: $spacingLarge;
+  display: flex;
+  height: 100%;
+  overflow: auto;
 
   > * {
     margin-bottom: $spacingMedium;
   }
 
+  > :first-child {
+    margin-top: auto;
+  }
+
   > :last-child {
-    margin-bottom: unset;
+    margin-bottom: auto;
   }
 }
 
