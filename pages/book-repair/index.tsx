@@ -13,6 +13,7 @@ import StyledContainer from "../../components/StyledContainer";
 import Title from "../../components/Title";
 import { analytics, db } from "../../firebase";
 import {
+  MAX_PICK_UP_DISTANCE_KM,
   PHONE_MODELS,
   PHONE_PRICING,
   PICK_UP_CHARGE,
@@ -49,20 +50,16 @@ const BookRepair = (): JSX.Element => {
   // Error message
   const [error, setError] = useState("");
 
-  // Calculate the price everytime the selection is changed
-  useEffect(() => {
-    setTotalPrice(calculatePrice(selection));
-  }, [selection]);
+  // Can be delivered
+  const [deliveryCheck, setCanDeliver] = useState({
+    can: false,
+    message: "Enable location",
+  });
 
   // Close the modal
   const closeModal = useCallback(() => {
     setModal(undefined);
   }, []);
-
-  useEffect(() => {
-    // Clear the error when the user performs an action
-    setError("");
-  }, [modal]);
 
   // Submit the booking
   const bookRepair = useCallback(async () => {
@@ -211,8 +208,13 @@ const BookRepair = (): JSX.Element => {
                   }));
                   closeModal();
                 }}
+                disabled={!deliveryCheck.can}
               >
-                {`Pick-up (+£${PICK_UP_CHARGE})`}
+                {`Pick-up (+£${PICK_UP_CHARGE})${
+                  !deliveryCheck.can && deliveryCheck.message
+                    ? " - " + deliveryCheck.message
+                    : ""
+                }`}
               </Button>
               <Button
                 type="default"
@@ -232,7 +234,66 @@ const BookRepair = (): JSX.Element => {
       default:
         return <></>;
     }
-  }, [modal, closeModal, selection]);
+  }, [modal, closeModal, selection, deliveryCheck]);
+
+  // Check if we can deliver
+  const canDeliver = useCallback((userLat: number, userLong: number) => {
+    const distanceKm = getDistanceFromLatLonInKm(
+      50.75643098431303,
+      -1.893119256572048,
+      userLat,
+      userLong
+    );
+
+    if (distanceKm < MAX_PICK_UP_DISTANCE_KM) {
+      setCanDeliver({
+        can: true,
+        message: "",
+      });
+    } else {
+      setCanDeliver({
+        can: false,
+        message: "Too far",
+      });
+    }
+  }, []);
+
+  // Calculate the price everytime the selection is changed
+  useEffect(() => {
+    setTotalPrice(calculatePrice(selection));
+  }, [selection]);
+
+  // Clear the error when the user performs an action
+  useEffect(() => {
+    setError("");
+  }, [modal]);
+
+  // Check if delivery can be done
+  useEffect(() => {
+    if (modal === "delivery-type") {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          ({ coords: { latitude, longitude } }) => {
+            canDeliver(latitude, longitude);
+          },
+          (err) => {
+            console.error(err);
+            setCanDeliver({
+              can: false,
+              message:
+                err.message === "User denied Geolocation"
+                  ? "Enable location"
+                  : "Cannot get location",
+            });
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+          }
+        );
+      }
+    }
+  }, [modal, canDeliver]);
 
   return (
     <>
@@ -336,6 +397,35 @@ export const formatDate = (date: Date) => {
       month: "long",
     }
   )} ${date.getFullYear()}`;
+};
+
+const getDistanceFromLatLonInKm = (
+  latCenter: number,
+  lonCenter: number,
+  latComp: number,
+  lonComp: number
+) => {
+  // Radius of the earth in km
+  var R = 6371;
+
+  // deg2rad below
+  var dLat = deg2rad(latComp - latCenter);
+  var dLon = deg2rad(lonComp - lonCenter);
+  var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(latCenter)) *
+      Math.cos(deg2rad(latComp)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  // Distance in km
+  var d = R * c;
+  return d;
+};
+
+const deg2rad = (deg: number) => {
+  return deg * (Math.PI / 180);
 };
 
 const getOrdinalNum = (n: number) => {

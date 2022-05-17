@@ -18,4 +18,10 @@
   &.cta {
     background-color: $btn-primary;
   }
+
+  &.disabled {
+    background-color: white;
+    box-shadow: unset;
+    cursor: default;
+  }
 }

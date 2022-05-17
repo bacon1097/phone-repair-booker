@@ -14,6 +14,8 @@ export const REPAIR_TYPES = [
 
 export const PICK_UP_CHARGE = 10;
 
+export const MAX_PICK_UP_DISTANCE_KM = 10;
+
 // Keep in 24-hour format
 export const AVAILABLE_START_TIME = "09:00";
 export const AVAILABLE_END_TIME = "18:00";
