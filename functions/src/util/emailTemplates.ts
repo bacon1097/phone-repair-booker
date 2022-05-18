@@ -1,0 +1,44 @@
+interface EmailTemplateBase {
+  title: string;
+  notes?: string;
+  date: string;
+  phone: string;
+  repairType: string;
+}
+
+interface EmailTemplatePickup extends EmailTemplateBase {
+  deliveryType: "pick-up";
+  pickUpLocation: string;
+}
+
+interface EmailTemplateDropoff extends EmailTemplateBase {
+  deliveryType: "drop-off";
+}
+
+export type EmailTemplate = EmailTemplatePickup | EmailTemplateDropoff;
+
+export const createEmailTemplate = (options: EmailTemplate): string => {
+  return (
+    "<div>" +
+    `<h1>${options.title}</h1>` +
+    "<p>" +
+    `Date: ${options.date}` +
+    "<br />" +
+    `Phone: ${options.phone}` +
+    "<br />" +
+    `Repair Type: ${options.repairType}` +
+    "<br />" +
+    `Delivery Type: ${options.deliveryType}` +
+    "<br />" +
+    `${
+      options.deliveryType === "pick-up"
+        ? `Pick-up Location: ${options.pickUpLocation}<br />`
+        : ""
+    }` +
+    (options.notes
+      ? "<br /><i>" + "Notes: " + "<br />" + options.notes + "</i>"
+      : "") +
+    "</p>" +
+    "</div>"
+  );
+};
