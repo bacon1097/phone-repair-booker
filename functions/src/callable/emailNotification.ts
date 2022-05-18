@@ -1,10 +1,9 @@
-import * as functions from "firebase-functions";
 import { firestore } from "..";
 import { createEmailTemplate } from "../util/emailTemplates";
 import transport from "../util/emailTransporter";
 import { validateBooking } from "../util/validators";
 
-export default async (data: any, context: functions.https.CallableContext) => {
+export default async (data: any) => {
   const email = data?.email;
   const bookingId = data?.bookingId;
 
