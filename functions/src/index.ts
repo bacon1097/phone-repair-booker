@@ -36,6 +36,8 @@ export const onBookingCreate = functions.firestore
         "<br />" +
         `Phone: ${data.phone || "N/A"}` +
         "<br />" +
+        `Repair Type: ${data.repairType || "N/A"}` +
+        "<br />" +
         `Delivery Type: ${data.deliveryType || "N/A"}` +
         "<br />" +
         `${
