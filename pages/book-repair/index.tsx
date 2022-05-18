@@ -18,17 +18,26 @@ import {
   PHONE_MODELS,
   PHONE_PRICING,
   PICK_UP_CHARGE,
-  REPAIR_TYPES
+  REPAIR_TYPES,
 } from "../../globals";
 import styles from "../../styles/book-repair/index.module.scss";
 
-export interface RepairSelection {
+interface RepairSelectionBase {
   phone: string;
   repairType: string;
   date: Date;
-  deliveryType: "pick-up" | "drop-off";
-  pickUpLocation: Address | undefined;
 }
+
+export interface RepairSelectionDropOff extends RepairSelectionBase {
+  deliveryType: "drop-off";
+}
+
+export interface RepairSelectionPickUp extends RepairSelectionBase {
+  deliveryType: "pick-up";
+  pickUpLocation: Address;
+}
+
+export type RepairSelection = RepairSelectionDropOff | RepairSelectionPickUp;
 
 const BookRepair = (): JSX.Element => {
   const router = useRouter();

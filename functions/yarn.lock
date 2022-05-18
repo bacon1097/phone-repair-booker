@@ -1263,10 +1263,10 @@
     "@types/lodash" "^4.14.104"
     "lodash" "^4.17.5"
 
-"firebase-functions@^3.18.0", "firebase-functions@>=2.0.0":
-  "integrity" "sha512-wUxJaUEceGpCxa+uAYTQUGM13Uc/mekWfJnhuqqPKr8S09WosoVRpoh1yVQO+AnMqNChq3psLkLxHPubW9Tg2A=="
-  "resolved" "https://registry.npmjs.org/firebase-functions/-/firebase-functions-3.21.1.tgz"
-  "version" "3.21.1"
+"firebase-functions@^3.21.2", "firebase-functions@>=2.0.0":
+  "integrity" "sha512-XZOSv7mLnd8uIzNA+rc+n+oM/g2Nn4rtUkOKeTMccYiWOMdMMUwhzuqRnE28mB65bveU12aTHkaJY6p3Pk6MUw=="
+  "resolved" "https://registry.npmjs.org/firebase-functions/-/firebase-functions-3.21.2.tgz"
+  "version" "3.21.2"
   dependencies:
     "@types/cors" "^2.8.5"
     "@types/express" "4.17.3"
