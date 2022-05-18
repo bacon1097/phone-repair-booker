@@ -25,7 +25,7 @@ export const onBookingCreate = functions.firestore
     date && date.setHours(date.getHours() + 1); // ! TODO: Is this correct?
 
     await transport.sendMail({
-      from: "Ben Brunyee <brunyeeb@gmail.com>",
+      from: "Phone Repair Booker <brunyeeb@gmail.com>",
       to: "brunyeeb@gmail.com",
       subject: "New Booking!",
       html:
@@ -77,3 +77,24 @@ const validateBooking = (data: any): boolean => {
 
   return true;
 };
+
+export const emailNotification = functions.https.onRequest(async (req, res) => {
+  const email = req.body.email;
+  const bookingId = req.body.id;
+
+  if (!email) {
+    res.status(400).send({
+      status: false,
+      message: "Please provide email",
+    });
+    return;
+  }
+
+  if (!bookingId) {
+    res.status(400).send({
+      status: false,
+      message: "Please provide a booking ID",
+    });
+    return;
+  }
+});
