@@ -21,3 +21,11 @@
 .reminderBtn {
   width: fit-content;
 }
+
+.emailNotification {
+  display: flex;
+
+  > :first-child {
+    margin-right: $spacingMedium;
+  }
+}

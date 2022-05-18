@@ -1,10 +1,11 @@
 import { getAnalytics, isSupported } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
+import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 import {
   connectFirestoreEmulator,
   getFirestore,
-  initializeFirestore
+  initializeFirestore,
 } from "firebase/firestore";
 
 const DEV = process.env.NODE_ENV === "development";
@@ -38,3 +39,6 @@ DEV && connectAuthEmulator(auth, `http://${LOCAL}:9099`);
 export const analytics = isSupported().then((yes) =>
   yes ? getAnalytics(app) : null
 );
+
+export const functions = getFunctions(app);
+DEV && connectFunctionsEmulator(functions, LOCAL, 5001);

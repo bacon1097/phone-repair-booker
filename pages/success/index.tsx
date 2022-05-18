@@ -1,21 +1,43 @@
 import { doc, getDoc } from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import Button from "../../components/Button";
 import Caption from "../../components/Caption";
+import Input from "../../components/Input";
 import Title from "../../components/Title";
-import { db } from "../../firebase";
+import { db, functions } from "../../firebase";
 import styles from "../../styles/success/index.module.scss";
 import { formatDate, RepairSelection } from "../book-repair";
 
 const Success = (): JSX.Element => {
   const router = useRouter();
   const { id } = router.query;
+  // ! TODO: Implement
   const [error, setError] = useState("");
   const [booking, setBooking] = useState<RepairSelection>();
   const firstLoad = useRef(true);
+  const [email, setEmail] = useState("");
+  const [notificationSent, setNotificationSent] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
-  // ! TODO: Implement
-  const addReminder = useCallback(() => {}, []);
+  const sendNotification = useCallback(async () => {
+    setIsSending(true);
+    try {
+      await httpsCallable(
+        functions,
+        "emailNotification"
+      )({
+        email,
+        bookingId: id,
+      });
+      setNotificationSent(true);
+    } catch (e) {
+      console.error(e);
+      setError("Failed to send email");
+    }
+    setIsSending(false);
+  }, [email, id]);
 
   useEffect(() => {
     const onLoad = async () => {
@@ -87,6 +109,21 @@ const Success = (): JSX.Element => {
           booking.phone
         } at ${formatDate(booking.date)}.`}
       </Caption>
+      <div className={styles.emailNotification}>
+        <Input
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <Button
+          type="cta"
+          onClick={sendNotification}
+          disabled={isSending || notificationSent}
+        >
+          Send
+        </Button>
+      </div>
+      {notificationSent && <Caption>Notification sent</Caption>}
       {booking.deliveryType === "drop-off" && (
         <Caption>
           <b>Drop-off location:</b>

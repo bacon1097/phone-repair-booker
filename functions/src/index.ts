@@ -10,6 +10,4 @@ export const onBookingCreate = functions.firestore
   .document("bookings/{id}")
   .onCreate(onBookingCreateFunc);
 
-export const emailNotification = functions.https.onRequest(
-  emailNotificationFunc
-);
+export const emailNotification = functions.https.onCall(emailNotificationFunc);

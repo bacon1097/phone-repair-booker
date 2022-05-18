@@ -4,29 +4,22 @@ import { createEmailTemplate } from "../util/emailTemplates";
 import transport from "../util/emailTransporter";
 import { validateBooking } from "../util/validators";
 
-export default async (
-  req: functions.https.Request,
-  res: functions.Response<any>
-) => {
-  const email = req.body.data.email;
-  const bookingId = req.body.data.bookingId;
-
-  console.log(req.body);
+export default async (data: any, context: functions.https.CallableContext) => {
+  const email = data?.email;
+  const bookingId = data?.bookingId;
 
   if (!email) {
-    res.status(400).send({
+    return {
       status: false,
       message: "Please provide email",
-    });
-    return;
+    };
   }
 
   if (!bookingId) {
-    res.status(400).send({
+    return {
       status: false,
       message: "Please provide a booking ID",
-    });
-    return;
+    };
   }
 
   let booking: any;
@@ -42,22 +35,20 @@ export default async (
     booking = data;
   } catch (e) {
     console.error(e);
-    res.status(500).send({
+    return {
       status: false,
       message: "Booking could not be found",
       error: e,
-    });
-    return;
+    };
   }
 
   const isValid = validateBooking(booking);
 
   if (!isValid) {
-    res.status(500).send({
+    return {
       status: false,
       message: "Booking is invalid",
-    });
-    return;
+    };
   }
 
   const date = booking.date.toDate();
@@ -88,17 +79,15 @@ export default async (
       email,
     });
   } catch (e) {
-    res.status(500).send({
+    return {
       status: false,
       message: "Failed to send email",
       error: e,
-    });
-    return;
+    };
   }
 
-  res.status(200).send({
+  return {
     status: true,
     message: "Email notification sent",
-  });
-  return;
+  };
 };
