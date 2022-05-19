@@ -1,7 +1,7 @@
-import * as functions from "firebase-functions";
-import onBookingCreateFunc from "./handlers/onBookingCreate";
-import emailNotificationFunc from "./callable/emailNotification";
 import * as admin from "firebase-admin";
+import * as functions from "firebase-functions";
+import emailNotificationFunc from "./callable/emailNotification";
+import onBookingCreateFunc from "./handlers/onBookingCreate";
 
 admin.initializeApp();
 export const firestore = admin.firestore();

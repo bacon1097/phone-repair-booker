@@ -62,9 +62,18 @@ export default async (data: any) => {
     };
   }
 
+  // ! TODO: This is only for BST
   const date = booking.date.toDate();
-  // ! TODO: Is this correct?
-  date && date.setHours(date.getHours() + 1);
+
+  if (!date) {
+    console.error("Booking has no date");
+    return {
+      status: false,
+      message: "Booking has no date",
+    };
+  }
+
+  date.setHours(date.getHours() + 1);
 
   try {
     await transport.sendMail({
@@ -73,7 +82,7 @@ export default async (data: any) => {
       subject: "Booking Confirmation",
       html: createEmailTemplate({
         title: "Phone Repair Booking Confirmation",
-        date: date ? date.toLocaleString("en-GB") : "N/A",
+        date: date.toLocaleString("en-GB"),
         phone: booking.phone || "N/A",
         repairType: booking.repairType || "N/A",
         deliveryType: booking.deliveryType || "N/A",
