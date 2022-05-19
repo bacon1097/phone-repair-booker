@@ -18,7 +18,7 @@ import {
   PHONE_MODELS,
   PHONE_PRICING,
   PICK_UP_CHARGE,
-  REPAIR_TYPES,
+  REPAIR_TYPES
 } from "../../globals";
 import styles from "../../styles/book-repair/index.module.scss";
 
@@ -73,6 +73,8 @@ const BookRepair = (): JSX.Element => {
     message: "Enable location",
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Close the modal
   const closeModal = useCallback(() => {
     setModal(undefined);
@@ -81,6 +83,7 @@ const BookRepair = (): JSX.Element => {
   // Submit the booking
   const bookRepair = useCallback(async () => {
     setError("");
+    setIsSubmitting(true);
 
     if (
       !(
@@ -141,6 +144,7 @@ const BookRepair = (): JSX.Element => {
     } catch (e) {
       console.error(e);
       setError("Failed to book time slot, please try again");
+      setIsSubmitting(false);
       return;
     }
 
@@ -149,6 +153,8 @@ const BookRepair = (): JSX.Element => {
     if (analytic && process.env.NODE_ENV === "production") {
       logEvent(analytic, "booking");
     }
+
+    setIsSubmitting(false);
 
     router.push({
       pathname: "success",
@@ -401,7 +407,7 @@ const BookRepair = (): JSX.Element => {
           Payment to be taken after satisfactory repair.
         </Caption>
         {error && <span className={styles.errorMessage}>{error}</span>}
-        <Button type="cta" onClick={bookRepair}>
+        <Button type="cta" onClick={bookRepair} disabled={isSubmitting}>
           Book
         </Button>
         <Caption className={styles.caption}>

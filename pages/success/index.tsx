@@ -13,7 +13,6 @@ import { formatDate, RepairSelection } from "../book-repair";
 const Success = (): JSX.Element => {
   const router = useRouter();
   const { id } = router.query;
-  // ! TODO: Implement
   const [error, setError] = useState("");
   const [booking, setBooking] = useState<RepairSelection>();
   const firstLoad = useRef(true);
@@ -22,20 +21,41 @@ const Success = (): JSX.Element => {
   const [isSending, setIsSending] = useState(false);
 
   const sendNotification = useCallback(async () => {
+    if (!email) {
+      setError("Please provide an email");
+      return;
+    }
+
+    if (!id || Array.isArray(id)) {
+      setError("Could not find booking ID");
+      return;
+    }
+
+    setError("");
     setIsSending(true);
+
     try {
-      await httpsCallable(
+      const res = await httpsCallable<
+        { email: string; bookingId: string },
+        { status?: boolean; message?: string }
+      >(
         functions,
         "emailNotification"
       )({
         email,
         bookingId: id,
       });
+
+      if (!res.data.status) {
+        throw new Error(res.data.message || "Failed to send email");
+      }
+
       setNotificationSent(true);
     } catch (e) {
       console.error(e);
-      setError("Failed to send email");
+      setError((e as any).message || "Failed to send email");
     }
+
     setIsSending(false);
   }, [email, id]);
 
@@ -120,10 +140,10 @@ const Success = (): JSX.Element => {
           onClick={sendNotification}
           disabled={isSending || notificationSent}
         >
-          Send
+          {isSending ? "Sending" : notificationSent ? "Sent" : "Send"}
         </Button>
       </div>
-      {notificationSent && <Caption>Notification sent</Caption>}
+      {error && <span className={styles.errorMessage}>{error}</span>}
       {booking.deliveryType === "drop-off" && (
         <Caption>
           <b>Drop-off location:</b>
