@@ -13,7 +13,6 @@ import { formatDate, RepairSelection } from "../book-repair";
 const Success = (): JSX.Element => {
   const router = useRouter();
   const { id } = router.query;
-  // ! TODO: Implement
   const [error, setError] = useState("");
   const [booking, setBooking] = useState<RepairSelection>();
   const firstLoad = useRef(true);
