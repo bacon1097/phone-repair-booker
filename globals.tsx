@@ -22,22 +22,22 @@ export const AVAILABLE_END_TIME = "18:00";
 
 export const PHONE_PRICING: PhonePricingMapping = {
   "iPhone 6": {
-    screen: 40,
+    screen: 45,
     battery: 30,
     "back camera": 20,
   },
   "iPhone 6 Plus": {
-    screen: 40,
+    screen: 45,
     battery: 30,
     "back camera": 20,
   },
   "iPhone 6s": {
-    screen: 40,
+    screen: 45,
     battery: 30,
     "back camera": 20,
   },
   "iPhone 6s Plus": {
-    screen: 40,
+    screen: 45,
     battery: 30,
     "back camera": 20,
   },
@@ -58,41 +58,48 @@ export const PHONE_PRICING: PhonePricingMapping = {
   },
   "iPhone 8 Plus": {
     screen: 50,
-    battery: 30,
+    battery: 25,
     "back camera": 20,
   },
   "iPhone X": {
-    screen: 250,
+    screen: 90,
+    battery: 30,
   },
   "iPhone XR": {
-    screen: 250,
+    screen: 95,
+    battery: 35,
   },
   "iPhone XS": {
-    screen: 250,
+    screen: 100,
+    battery: 35,
   },
   "iPhone XS Max": {
     screen: 250,
+    battery: 35,
   },
   "iPhone 11": {
-    screen: 250,
+    screen: 105,
+    battery: 40,
   },
   "iPhone 11 Pro": {
-    screen: 250,
+    screen: 135,
+    battery: 45,
   },
   "iPhone 11 Pro Max": {
-    screen: 250,
+    screen: 200,
+    battery: 45,
   },
   "iPhone 12 mini": {
     screen: 250,
   },
   "iPhone 12": {
-    screen: 250,
+    screen: 255,
   },
   "iPhone 12 Pro": {
-    screen: 250,
+    screen: 260,
   },
   "iPhone 12 Pro Max": {
-    screen: 250,
+    screen: 290,
   },
   "iPhone 13 mini": {
     screen: 250,
