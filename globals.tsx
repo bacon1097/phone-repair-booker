@@ -77,15 +77,19 @@ export const PHONE_PRICING: PhonePricingMapping = {
   },
   "iPhone XS Max": {
     screen: 250,
+    "back camera": 95,
   },
   "iPhone 11": {
     screen: 250,
+    "back camera": 95,
   },
   "iPhone 11 Pro": {
     screen: 250,
+    "back camera": 150,
   },
   "iPhone 11 Pro Max": {
     screen: 250,
+    "back camera": 150,
   },
   "iPhone 12 mini": {
     screen: 250,
