@@ -82,9 +82,6 @@ const BookRepair = (): JSX.Element => {
 
   // Submit the booking
   const bookRepair = useCallback(async () => {
-    setError("");
-    setIsSubmitting(true);
-
     if (
       !(
         selection.date &&
@@ -128,6 +125,7 @@ const BookRepair = (): JSX.Element => {
 
       docId = (
         await addDoc(collection(db, "bookings"), {
+          price: totalPrice,
           date: selection.date,
           deliveryType: selection.deliveryType,
           phone: selection.phone,
@@ -144,7 +142,6 @@ const BookRepair = (): JSX.Element => {
     } catch (e) {
       console.error(e);
       setError("Failed to book time slot, please try again");
-      setIsSubmitting(false);
       return;
     }
 
@@ -154,8 +151,6 @@ const BookRepair = (): JSX.Element => {
       logEvent(analytic, "booking");
     }
 
-    setIsSubmitting(false);
-
     router.push({
       pathname: "success",
       query: {
@@ -163,7 +158,14 @@ const BookRepair = (): JSX.Element => {
       },
     });
     return;
-  }, [selection, router]);
+  }, [selection, router, totalPrice]);
+
+  const bookRepairWrapper = useCallback(() => {
+    setError("");
+    bookRepair().finally(() => {
+      setIsSubmitting(false);
+    });
+  }, [bookRepair]);
 
   // Modals depending on the option clicked
   const getModal = useCallback((): JSX.Element => {
@@ -410,7 +412,7 @@ const BookRepair = (): JSX.Element => {
           Payment to be taken after satisfactory repair.
         </Caption>
         {error && <span className={styles.errorMessage}>{error}</span>}
-        <Button type="cta" onClick={bookRepair} disabled={isSubmitting}>
+        <Button type="cta" onClick={bookRepairWrapper} disabled={isSubmitting}>
           Book
         </Button>
         <Caption className={styles.caption}>

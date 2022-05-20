@@ -82,6 +82,7 @@ export default async (data: any) => {
       subject: "Booking Confirmation",
       html: createEmailTemplate({
         title: "Phone Repair Booking Confirmation",
+        price: booking.price,
         date: date.toLocaleString("en-GB"),
         phone: booking.phone || "N/A",
         repairType: booking.repairType || "N/A",
