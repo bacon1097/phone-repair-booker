@@ -7,7 +7,8 @@
     "build": "next build && next export",
     "start": "next start",
     "lint": "next lint",
-    "emulate": "firebase emulators:start"
+    "emulate": "firebase emulators:start",
+    "deploy": "yarn build && firebase deploy --only hosting"
   },
   "dependencies": {
     "clsx": "^1.1.1",
