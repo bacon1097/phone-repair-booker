@@ -1,5 +1,6 @@
 import { doc, getDoc } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
+import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Button from "../../components/Button";
@@ -122,7 +123,22 @@ const Success = (): JSX.Element => {
     <div className={styles.container}>
       <div>
         <Title className={styles.smallTitle}>Nice!</Title>
-        <Title>{"You're Booked In!"}</Title>
+        <motion.div
+          initial={{
+            scale: 0.8,
+          }}
+          animate={{
+            scale: 1,
+            transition: {
+              type: "spring",
+              mass: 1,
+              stiffness: 200,
+              damping: 2,
+            },
+          }}
+        >
+          <Title>{"You're Booked In!"}</Title>
+        </motion.div>
       </div>
       <Caption>
         {`You've booked for a ${booking.repairType} repair for an ${

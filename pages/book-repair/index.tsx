@@ -169,18 +169,21 @@ const BookRepair = (): JSX.Element => {
   const getModal = useCallback((): JSX.Element => {
     switch (modal) {
       case "phone":
+        const copyPhoneArray = [...PHONE_MODELS];
+        copyPhoneArray.reverse();
+
         return (
           <Modal className={styles.modal} onClose={closeModal}>
             <Title>1. Phone</Title>
             <ListPicker
-              options={PHONE_MODELS.reverse().map((model) => ({
+              options={copyPhoneArray.map((model) => ({
                 key: model,
                 text: model,
                 value: model,
               }))}
               className={styles.modalContent}
               onSelection={(phone) => {
-                setSelection((cur) => ({ ...cur, phone }));
+                setSelection((cur) => ({ ...cur, phone, repairType: "" }));
                 closeModal();
               }}
             />
@@ -411,8 +414,9 @@ const BookRepair = (): JSX.Element => {
           Book
         </Button>
         <Caption className={styles.caption}>
-          All repairs will take a minimum of 3 days to complete. If you need
-          your repair within the hour, please call{" "}
+          All repairs are typically done within the hour however this is highly
+          dependant on stock availability. If you <b>need</b> your repair done
+          within the hour, please call{" "}
           <b
             style={{
               color: "#EA5454",
