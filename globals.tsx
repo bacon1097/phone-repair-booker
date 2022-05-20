@@ -12,13 +12,19 @@ export const REPAIR_TYPES = [
   "front camera",
 ] as const;
 
+// Charge for pick up in £
 export const PICK_UP_CHARGE = 10;
 
+// Max pick up distance in KM
 export const MAX_PICK_UP_DISTANCE_KM = 10;
 
-// Keep in 24-hour format
+// NOTE: Keep in 24-hour format
+// Available times for booking repairs
 export const AVAILABLE_START_TIME = "09:00";
 export const AVAILABLE_END_TIME = "18:00";
+
+// Minimum days until booking is available
+export const BOOKING_SPACING = 3;
 
 export const PHONE_PRICING: PhonePricingMapping = {
   "iPhone 6": {

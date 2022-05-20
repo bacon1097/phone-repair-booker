@@ -3,7 +3,11 @@ import clsx from "clsx";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { AVAILABLE_END_TIME, AVAILABLE_START_TIME } from "../../globals";
+import {
+  AVAILABLE_END_TIME,
+  AVAILABLE_START_TIME,
+  BOOKING_SPACING
+} from "../../globals";
 import { RepairSelection } from "../../pages/book-repair";
 import Button from "../Button";
 import StyledContainer from "../StyledContainer";
@@ -143,7 +147,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
             hideDays={
               // If current month then hide all days up to the current date
               focussedDate.getMonth() === new Date().getMonth()
-                ? new Date().getDate()
+                ? new Date().getDate() - 1 + BOOKING_SPACING
                 : 0
             }
           />
@@ -229,7 +233,8 @@ const MonthDays = ({
   hideDays,
   onSelect = () => {},
 }: MonthDaysProps): JSX.Element => {
-  const days = new Array(dayCount - hideDays).fill(0);
+  const days =
+    dayCount - hideDays >= 0 ? new Array(dayCount - hideDays).fill(0) : [];
 
   return (
     <div className={styles.MonthDays}>
