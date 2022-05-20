@@ -34,10 +34,13 @@ export default async (snap: functions.firestore.QueryDocumentSnapshot) => {
     description:
       `Phone: ${data.phone || "N/A"}\n` +
       `Repair Type: ${data.repairType || "N/A"}\n` +
-      `Delivery Type: ${data.deliveryType || "N/A"}` +
+      `Delivery Type: ${data.deliveryType || "N/A"}\n` +
       (data.deliveryType === "pick-up"
-        ? "\n" + Object.values(data.pickUpLocation).join(", ")
-        : ""),
+        ? "Pick-up Location: " +
+          Object.values(data.pickUpLocation).join(", ") +
+          "\n"
+        : "") +
+      `Price: £${data.price}`,
     start: date.toISOString(),
     end: endDate.toISOString(),
   });
@@ -48,6 +51,7 @@ export default async (snap: functions.firestore.QueryDocumentSnapshot) => {
     subject: "New Booking!",
     html: createEmailTemplate({
       title: "New Booking Received",
+      price: data.price,
       date: displayDate.toLocaleString("en-GB"),
       phone: data.phone || "N/A",
       repairType: data.repairType || "N/A",

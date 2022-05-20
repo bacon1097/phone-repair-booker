@@ -4,6 +4,7 @@ interface EmailTemplateBase {
   date: string;
   phone: string;
   repairType: string;
+  price: number;
 }
 
 interface EmailTemplatePickup extends EmailTemplateBase {
@@ -35,6 +36,8 @@ export const createEmailTemplate = (options: EmailTemplate): string => {
         ? `Pick-up Location: ${options.pickUpLocation}<br />`
         : ""
     }` +
+    `Price: £${options.price}` +
+    "<br />" +
     (options.notes
       ? "<br /><i>" + "Notes: " + "<br />" + options.notes + "</i>"
       : "") +

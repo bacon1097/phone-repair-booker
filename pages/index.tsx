@@ -37,6 +37,8 @@ const Home: NextPage = () => {
               duration: 0.4,
               ease: "easeInOut",
               delay: 2,
+              repeat: Infinity,
+              repeatDelay: 2,
             },
           }}
         >
