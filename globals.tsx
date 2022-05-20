@@ -62,13 +62,18 @@ export const PHONE_PRICING: PhonePricingMapping = {
     "back camera": 20,
   },
   "iPhone X": {
-    screen: 250,
+    screen: 90,
+    battery: 30,
+    "back camera": 70,
   },
   "iPhone XR": {
-    screen: 250,
+    screen: 95,
+    battery: 35,
+    "back camera": 85,
   },
   "iPhone XS": {
     screen: 250,
+    "back camera": 95,
   },
   "iPhone XS Max": {
     screen: 250,
@@ -92,7 +97,8 @@ export const PHONE_PRICING: PhonePricingMapping = {
     screen: 250,
   },
   "iPhone 12 Pro Max": {
-    screen: 250,
+    screen: 290,
+    "back camera": 170,
   },
   "iPhone 13 mini": {
     screen: 250,
