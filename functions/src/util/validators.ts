@@ -6,7 +6,7 @@ export const validateBooking = (data: any): boolean => {
       typeof data.date.toDate === "function" &&
       data.deliveryType &&
       data.repairType &&
-      data.price
+      typeof data.price !== "undefined"
     )
   ) {
     return false;
