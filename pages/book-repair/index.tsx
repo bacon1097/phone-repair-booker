@@ -173,7 +173,7 @@ const BookRepair = (): JSX.Element => {
           <Modal className={styles.modal} onClose={closeModal}>
             <Title>1. Phone</Title>
             <ListPicker
-              options={PHONE_MODELS.map((model) => ({
+              options={PHONE_MODELS.reverse().map((model) => ({
                 key: model,
                 text: model,
                 value: model,
