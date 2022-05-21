@@ -172,118 +172,67 @@ const BookRepair = (): JSX.Element => {
   const getModal = useCallback((): JSX.Element => {
     switch (modal) {
       case "phone":
-        const copyPhoneArray = [...PHONE_MODELS];
-        copyPhoneArray.reverse();
-
         return (
-          <Modal className={styles.modal} onClose={closeModal}>
-            <Title>1. Phone</Title>
-            <ListPicker
-              options={copyPhoneArray.map((model) => ({
-                key: model,
-                text: model,
-                value: model,
-              }))}
-              className={styles.modalContent}
-              onSelection={(phone) => {
-                setSelection((cur) => ({ ...cur, phone, repairType: "" }));
-                closeModal();
-              }}
-            />
-          </Modal>
+          <PhoneModal
+            onClose={closeModal}
+            onSelection={(phone) => {
+              setSelection((cur) => ({ ...cur, phone, repairType: "" }));
+              closeModal();
+            }}
+          />
         );
       case "repair-type":
         return (
-          <Modal className={styles.modal} onClose={closeModal}>
-            <Title>2. Repair Type</Title>
-            <ListPicker
-              options={REPAIR_TYPES.map((repairType) => {
-                const hasPrice = selection.phone
-                  ? typeof PHONE_PRICING[selection.phone]?.[
-                      repairType as typeof REPAIR_TYPES[number]
-                    ] !== "undefined"
-                  : false;
-
-                return {
-                  key: repairType,
-                  text: repairType + (hasPrice ? "" : " - N/A"),
-                  value: repairType,
-                  selectable: hasPrice,
-                };
-              })}
-              className={styles.modalContent}
-              onSelection={(repairType) => {
-                setSelection((cur) => ({ ...cur, repairType }));
-                closeModal();
-              }}
-            />
-          </Modal>
+          <RepairTypeModal
+            onSelection={(repairType) => {
+              setSelection((cur) => ({ ...cur, repairType }));
+              closeModal();
+            }}
+            onClose={closeModal}
+            selectedPhone={selection.phone}
+          />
         );
       case "date":
         return (
-          <Modal className={styles.modal} onClose={closeModal}>
-            <Title>3. Date</Title>
-            <DateTimePicker
-              onSelection={(date) => {
-                setSelection((cur) => ({ ...cur, date }));
-                closeModal();
-              }}
-              className={styles.modalContent}
-            />
-          </Modal>
+          <DateModal
+            onClose={closeModal}
+            onSelection={(date) => {
+              setSelection((cur) => ({ ...cur, date }));
+              closeModal();
+            }}
+          />
         );
       case "delivery-type":
         return (
-          <Modal className={styles.modal} onClose={closeModal}>
-            <Title>4. Delivery Type</Title>
-            <div className={styles.deliveryBtnContainer}>
-              <Button
-                type="default"
-                onClick={() => {
-                  setSelection((cur) => ({
-                    ...cur,
-                    deliveryType: "pick-up",
-                  }));
-                  closeModal();
-                }}
-                disabled={!deliveryCheck.can}
-              >
-                {`Pick-up (+£${PICK_UP_CHARGE})${
-                  !deliveryCheck.can && deliveryCheck.message
-                    ? " - " + deliveryCheck.message
-                    : ""
-                }`}
-              </Button>
-              <Button
-                type="default"
-                onClick={() => {
-                  setSelection((cur) => ({
-                    ...cur,
-                    deliveryType: "drop-off",
-                  }));
-                  closeModal();
-                }}
-              >
-                {"Drop-off"}
-              </Button>
-            </div>
-          </Modal>
+          <DeliveryTypeModal
+            onClose={closeModal}
+            onSelection={(deliveryType) => {
+              setSelection((cur) => ({
+                ...cur,
+                deliveryType,
+              }));
+              closeModal();
+            }}
+            can={deliveryCheck.can}
+            message={
+              !deliveryCheck.can && deliveryCheck.message
+                ? " - " + deliveryCheck.message
+                : ""
+            }
+          />
         );
       case "pick-up-location":
         return (
-          <Modal className={styles.modal} onClose={closeModal}>
-            <Title>5. Pick-up Address</Title>
-            <AddressForm
-              onSave={(address) => {
-                console.log(address);
-                setSelection((cur) => ({
-                  ...cur,
-                  pickUpLocation: address,
-                }));
-                closeModal();
-              }}
-            />
-          </Modal>
+          <PickUpLocationModal
+            onClose={closeModal}
+            onSelection={(address) => {
+              setSelection((cur) => ({
+                ...cur,
+                pickUpLocation: address,
+              }));
+              closeModal();
+            }}
+          />
         );
       default:
         return <></>;
@@ -553,6 +502,144 @@ interface OptionTitleProps {
 // Simple formatting for the title of each option
 const OptionTitle = ({ number, text }: OptionTitleProps): JSX.Element => {
   return <span className={styles.OptionTitle}>{`${number}. ${text}`}</span>;
+};
+
+interface PhoneModalProps {
+  onSelection: (phone: string) => void;
+  onClose: () => void;
+}
+
+const PhoneModal = ({
+  onClose = () => {},
+  onSelection = () => {},
+}: PhoneModalProps): JSX.Element => {
+  const copyPhoneArray = [...PHONE_MODELS];
+  copyPhoneArray.reverse();
+
+  return (
+    <Modal className={styles.modal} onClose={onClose}>
+      <Title>1. Phone</Title>
+      <ListPicker
+        options={copyPhoneArray.map((model) => ({
+          key: model,
+          text: model,
+          value: model,
+        }))}
+        className={styles.modalContent}
+        onSelection={onSelection}
+      />
+    </Modal>
+  );
+};
+
+interface RepairTypeModal {
+  onSelection: (repairType: string) => void;
+  onClose: () => void;
+  selectedPhone?: string;
+}
+
+const RepairTypeModal = ({
+  onClose = () => {},
+  onSelection = () => {},
+  selectedPhone,
+}: RepairTypeModal): JSX.Element => {
+  return (
+    <Modal className={styles.modal} onClose={onClose}>
+      <Title>2. Repair Type</Title>
+      <ListPicker
+        options={REPAIR_TYPES.map((repairType) => {
+          const hasPrice = selectedPhone
+            ? typeof PHONE_PRICING[selectedPhone]?.[
+                repairType as typeof REPAIR_TYPES[number]
+              ] !== "undefined"
+            : false;
+
+          return {
+            key: repairType,
+            text: repairType + (hasPrice ? "" : " - N/A"),
+            value: repairType,
+            selectable: hasPrice,
+          };
+        })}
+        className={styles.modalContent}
+        onSelection={onSelection}
+      />
+    </Modal>
+  );
+};
+
+interface DateModalProps {
+  onClose: () => void;
+  onSelection: (date: Date) => void;
+}
+
+const DateModal = ({
+  onClose = () => {},
+  onSelection = () => {},
+}: DateModalProps): JSX.Element => {
+  return (
+    <Modal className={styles.modal} onClose={onClose}>
+      <Title>3. Date</Title>
+      <DateTimePicker
+        onSelection={onSelection}
+        className={styles.modalContent}
+      />
+    </Modal>
+  );
+};
+
+interface DeliveryTypeModalProps {
+  onClose: () => void;
+  onSelection: (deliveryType: RepairSelection["deliveryType"]) => void;
+  message?: string;
+  can?: boolean;
+}
+
+const DeliveryTypeModal = ({
+  onClose = () => {},
+  onSelection = () => {},
+  can,
+  message = "",
+}: DeliveryTypeModalProps): JSX.Element => {
+  return (
+    <Modal className={styles.modal} onClose={onClose}>
+      <Title>4. Delivery Type</Title>
+      <div className={styles.deliveryBtnContainer}>
+        <Button
+          type="default"
+          onClick={() => onSelection("pick-up")}
+          disabled={!can}
+        >
+          {`Pick-up (+£${PICK_UP_CHARGE})${message}`}
+        </Button>
+        <Button
+          type="default"
+          onClick={() => {
+            onSelection("drop-off");
+          }}
+        >
+          {"Drop-off"}
+        </Button>
+      </div>
+    </Modal>
+  );
+};
+
+interface PickUpLocationModalProps {
+  onClose: () => void;
+  onSelection: (address: RepairSelectionPickUp["pickUpLocation"]) => void;
+}
+
+const PickUpLocationModal = ({
+  onClose = () => {},
+  onSelection = () => {},
+}: PickUpLocationModalProps): JSX.Element => {
+  return (
+    <Modal className={styles.modal} onClose={onClose}>
+      <Title>5. Pick-up Address</Title>
+      <AddressForm onSave={onSelection} />
+    </Modal>
+  );
 };
 
 export default BookRepair;
