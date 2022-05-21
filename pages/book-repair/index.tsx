@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import { logEvent } from "firebase/analytics";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { motion } from "framer-motion";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import AddressForm, { Address } from "../../components/AddressForm";
@@ -350,6 +351,9 @@ const BookRepair = (): JSX.Element => {
 
   return (
     <>
+      <Head>
+        <title>Book Phone Repair</title>
+      </Head>
       {getModal()}
       <motion.div
         animate="pageAnimate"

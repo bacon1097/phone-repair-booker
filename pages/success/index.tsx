@@ -1,6 +1,7 @@
 import { doc, getDoc } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { motion } from "framer-motion";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Button from "../../components/Button";
@@ -120,63 +121,68 @@ const Success = (): JSX.Element => {
   }
 
   return (
-    <div className={styles.container}>
-      <div>
-        <Title className={styles.smallTitle}>Nice!</Title>
-        <motion.div
-          initial={{
-            scale: 0.8,
-          }}
-          animate={{
-            scale: 1,
-            transition: {
-              type: "spring",
-              mass: 1,
-              stiffness: 200,
-              damping: 2,
-            },
-          }}
-        >
-          <Title>{"You're Booked In!"}</Title>
-        </motion.div>
-      </div>
-      <Caption>
-        {`You've booked for a ${booking.repairType} repair for an ${
-          booking.phone
-        } at ${formatDate(booking.date)}.`}
-      </Caption>
-      <div className={styles.emailNotification}>
-        <Input
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <Button
-          type="cta"
-          onClick={sendNotification}
-          disabled={isSending || notificationSent}
-        >
-          {isSending ? "Sending" : notificationSent ? "Sent" : "Send"}
-        </Button>
-      </div>
-      {error && <span className={styles.errorMessage}>{error}</span>}
-      {booking.deliveryType === "drop-off" && (
+    <>
+      <Head>
+        <title>Success!</title>
+      </Head>
+      <div className={styles.container}>
+        <div>
+          <Title className={styles.smallTitle}>Nice!</Title>
+          <motion.div
+            initial={{
+              scale: 0.8,
+            }}
+            animate={{
+              scale: 1,
+              transition: {
+                type: "spring",
+                mass: 1,
+                stiffness: 200,
+                damping: 2,
+              },
+            }}
+          >
+            <Title>{"You're Booked In!"}</Title>
+          </motion.div>
+        </div>
         <Caption>
-          <b>Drop-off location:</b>
-          <br />
-          100 Howeth Road,
-          <br />
-          Bournemouth,
-          <br />
-          BH10 5ED,
-          <br />
-          United Kingdom
+          {`You've booked for a ${booking.repairType} repair for an ${
+            booking.phone
+          } at ${formatDate(booking.date)}.`}
         </Caption>
-      )}
-      {/* <Button type="cta" onClick={addReminder} className={styles.reminderBtn}>
+        <div className={styles.emailNotification}>
+          <Input
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Button
+            type="cta"
+            onClick={sendNotification}
+            disabled={isSending || notificationSent}
+          >
+            {isSending ? "Sending" : notificationSent ? "Sent" : "Send"}
+          </Button>
+        </div>
+        {error && <span className={styles.errorMessage}>{error}</span>}
+        {booking.deliveryType === "drop-off" && (
+          <Caption>
+            <b>Drop-off location:</b>
+            <br />
+            100 Howeth Road,
+            <br />
+            Bournemouth,
+            <br />
+            BH10 5ED,
+            <br />
+            United Kingdom
+          </Caption>
+        )}
+        {/* <Button type="cta" onClick={addReminder} className={styles.reminderBtn}>
         Add Reminder
       </Button> */}
-    </div>
+      </div>
+    </>
   );
 };
 
