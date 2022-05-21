@@ -213,8 +213,8 @@ const BookRepair = (): JSX.Element => {
               }));
               closeModal();
             }}
-            can={deliveryCheck.can}
-            message={
+            canDeliver={deliveryCheck.can}
+            deliverMessage={
               !deliveryCheck.can && deliveryCheck.message
                 ? " - " + deliveryCheck.message
                 : ""
@@ -591,15 +591,15 @@ const DateModal = ({
 interface DeliveryTypeModalProps {
   onClose: () => void;
   onSelection: (deliveryType: RepairSelection["deliveryType"]) => void;
-  message?: string;
-  can?: boolean;
+  deliverMessage?: string;
+  canDeliver?: boolean;
 }
 
 const DeliveryTypeModal = ({
   onClose = () => {},
   onSelection = () => {},
-  can,
-  message = "",
+  canDeliver,
+  deliverMessage = "",
 }: DeliveryTypeModalProps): JSX.Element => {
   return (
     <Modal className={styles.modal} onClose={onClose}>
@@ -608,9 +608,9 @@ const DeliveryTypeModal = ({
         <Button
           type="default"
           onClick={() => onSelection("pick-up")}
-          disabled={!can}
+          disabled={!canDeliver}
         >
-          {`Pick-up (+£${PICK_UP_CHARGE})${message}`}
+          {`Pick-up (+£${PICK_UP_CHARGE})${deliverMessage}`}
         </Button>
         <Button
           type="default"
