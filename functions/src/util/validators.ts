@@ -24,5 +24,9 @@ export const validateBooking = (data: any): boolean => {
     }
   }
 
+  if (data.repairType === "screen" && !data.phoneScreenColor) {
+    return false;
+  }
+
   return true;
 };

@@ -37,6 +37,11 @@
   width: 100%;
   cursor: pointer;
 
+  &.inset {
+    width: calc(100% - $spacingMedium);
+    margin-left: auto;
+  }
+
   .checkIcon {
     stroke: black;
     stroke-width: 0.5px;
@@ -71,7 +76,7 @@
   overflow: auto;
 }
 
-.deliveryBtnContainer {
+.modalButtonContainer {
   display: flex;
   flex-direction: column;
 
@@ -86,4 +91,8 @@
 
 .errorMessage {
   color: $btn-primary;
+}
+
+.dropOffLocation {
+  text-align: center;
 }
