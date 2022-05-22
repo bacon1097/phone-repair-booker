@@ -4,6 +4,7 @@ interface EmailTemplateBase {
   date: string;
   phone: string;
   repairType: string;
+  phoneScreenColor?: string;
   price: number;
 }
 
@@ -29,13 +30,14 @@ export const createEmailTemplate = (options: EmailTemplate): string => {
     "<br />" +
     `Repair Type: ${options.repairType}` +
     "<br />" +
+    (options.repairType === "screen"
+      ? `Phone Screen Color: ${options.phoneScreenColor}<br />`
+      : "") +
     `Delivery Type: ${options.deliveryType}` +
     "<br />" +
-    `${
-      options.deliveryType === "pick-up"
-        ? `Pick-up Location: ${options.pickUpLocation}<br />`
-        : ""
-    }` +
+    (options.deliveryType === "pick-up"
+      ? `Pick-up Location: ${options.pickUpLocation}<br />`
+      : "") +
     `Price: £${options.price}` +
     "<br />" +
     (options.notes

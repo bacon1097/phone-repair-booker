@@ -34,6 +34,9 @@ export default async (snap: functions.firestore.QueryDocumentSnapshot) => {
     description:
       `Phone: ${data.phone || "N/A"}\n` +
       `Repair Type: ${data.repairType || "N/A"}\n` +
+      (data.repairType === "screen"
+        ? `Phone Screen Color: ${data.phoneScreenColor}\n`
+        : "") +
       `Delivery Type: ${data.deliveryType || "N/A"}\n` +
       (data.deliveryType === "pick-up"
         ? "Pick-up Location: " +
@@ -55,6 +58,9 @@ export default async (snap: functions.firestore.QueryDocumentSnapshot) => {
       date: displayDate.toLocaleString("en-GB"),
       phone: data.phone || "N/A",
       repairType: data.repairType || "N/A",
+      ...(data.repairType === "screen" && {
+        phoneScreenColor: data.phoneScreenColor,
+      }),
       deliveryType: data.deliveryType || "N/A",
       ...(data.deliveryType === "pick-up" && {
         pickUpLocation: Object.values(data.pickUpLocation).join(", "),

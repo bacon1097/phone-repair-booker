@@ -86,6 +86,9 @@ export default async (data: any) => {
         date: date.toLocaleString("en-GB"),
         phone: booking.phone || "N/A",
         repairType: booking.repairType || "N/A",
+        ...(booking.repairType === "screen" && {
+          phoneScreenColor: booking.phoneScreenColor,
+        }),
         deliveryType: booking.deliveryType || "N/A",
         ...(booking.deliveryType === "pick-up" && {
           pickUpLocation: Object.values(booking.pickUpLocation).join(", "),

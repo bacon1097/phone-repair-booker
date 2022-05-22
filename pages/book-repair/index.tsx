@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import clsx from "clsx";
 import { logEvent } from "firebase/analytics";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { motion } from "framer-motion";
@@ -27,6 +28,7 @@ interface RepairSelectionBase {
   phone: string;
   repairType: string;
   date: Date;
+  phoneScreenColor?: "white" | "black";
 }
 
 export interface RepairSelectionDropOff extends RepairSelectionBase {
@@ -50,6 +52,7 @@ const BookRepair = (): JSX.Element => {
     date: undefined,
     deliveryType: undefined,
     pickUpLocation: undefined,
+    phoneScreenColor: undefined,
   });
 
   // The total price displayed
@@ -62,6 +65,7 @@ const BookRepair = (): JSX.Element => {
     | "date"
     | "delivery-type"
     | "pick-up-location"
+    | "phone-screen-color"
     | undefined
   >();
 
@@ -102,6 +106,12 @@ const BookRepair = (): JSX.Element => {
       return;
     }
 
+    if (selection.repairType === "screen" && !selection.phoneScreenColor) {
+      console.warn("No phone screen color set");
+      setError("Please select your phone's screen color");
+      return;
+    }
+
     if (
       !PHONE_PRICING[selection.phone]?.[
         selection.repairType as typeof REPAIR_TYPES[number]
@@ -131,6 +141,9 @@ const BookRepair = (): JSX.Element => {
           deliveryType: selection.deliveryType,
           phone: selection.phone,
           repairType: selection.repairType,
+          ...(selection.repairType === "screen" && {
+            phoneScreenColor: selection.phoneScreenColor,
+          }),
           ...(selection.deliveryType === "pick-up" && {
             pickUpLocation: selection.pickUpLocation,
           }),
@@ -190,6 +203,16 @@ const BookRepair = (): JSX.Element => {
             }}
             onClose={closeModal}
             selectedPhone={selection.phone}
+          />
+        );
+      case "phone-screen-color":
+        return (
+          <PhoneScreenColorModal
+            onSelection={(phoneColor) => {
+              setSelection((cur) => ({ ...cur, phoneScreenColor: phoneColor }));
+              closeModal();
+            }}
+            onClose={closeModal}
           />
         );
       case "date":
@@ -333,6 +356,16 @@ const BookRepair = (): JSX.Element => {
           {...(selection.repairType && { check: true })}
           onClick={() => setModal("repair-type")}
         />
+        {selection.repairType === "screen" && (
+          <Option
+            number={2.1}
+            title="Phone Screen Color"
+            inset
+            value={selection.phoneScreenColor}
+            {...(selection.phoneScreenColor && { check: true })}
+            onClick={() => setModal("phone-screen-color")}
+          />
+        )}
         <Option
           number={3}
           title="Date"
@@ -349,8 +382,9 @@ const BookRepair = (): JSX.Element => {
         />
         {selection.deliveryType === "pick-up" && (
           <Option
-            number={5}
+            number={4.1}
             title="Pick-up Address"
+            inset
             value={
               selection.pickUpLocation
                 ? formatAddress(selection.pickUpLocation)
@@ -361,6 +395,19 @@ const BookRepair = (): JSX.Element => {
           />
         )}
         <span className={styles.totalPrice}>{`Total: £${totalPrice}`}</span>
+        {selection.deliveryType === "drop-off" && (
+          <Caption className={styles.dropOffLocation}>
+            <b>Drop-off location:</b>
+            <br />
+            100 Howeth Road,
+            <br />
+            Bournemouth,
+            <br />
+            BH10 5ED,
+            <br />
+            United Kingdom
+          </Caption>
+        )}
         <Caption className={styles.caption}>
           Payment to be taken after satisfactory repair.
         </Caption>
@@ -467,6 +514,7 @@ interface OptionProps
   number: number;
   value?: string;
   check?: boolean;
+  inset?: boolean;
 }
 
 // The options that are displayed to the user
@@ -475,11 +523,14 @@ const Option = ({
   number,
   value,
   check,
+  inset,
   onClick = () => {},
 }: OptionProps): JSX.Element => {
   return (
     <StyledContainer
-      className={styles.optionContainer}
+      className={clsx(styles.optionContainer, {
+        [styles.inset]: inset
+      })}
       onClick={onClick}
       pressable
     >
@@ -568,6 +619,35 @@ const RepairTypeModal = ({
   );
 };
 
+interface PhoneScreenColorModalProps {
+  onClose: () => void;
+  onSelection: (phoneColor: RepairSelection["phoneScreenColor"]) => void;
+}
+
+const PhoneScreenColorModal = ({
+  onClose = () => {},
+  onSelection = () => {},
+}: PhoneScreenColorModalProps): JSX.Element => {
+  return (
+    <Modal className={styles.modal} onClose={onClose}>
+      <Title>2.1. Phone Screen Color</Title>
+      <div className={styles.modalButtonContainer}>
+        <Button type="default" onClick={() => onSelection("white")}>
+          White
+        </Button>
+        <Button
+          type="default"
+          onClick={() => {
+            onSelection("black");
+          }}
+        >
+          Black
+        </Button>
+      </div>
+    </Modal>
+  );
+};
+
 interface DateModalProps {
   onClose: () => void;
   onSelection: (date: Date) => void;
@@ -604,7 +684,7 @@ const DeliveryTypeModal = ({
   return (
     <Modal className={styles.modal} onClose={onClose}>
       <Title>4. Delivery Type</Title>
-      <div className={styles.deliveryBtnContainer}>
+      <div className={styles.modalButtonContainer}>
         <Button
           type="default"
           onClick={() => onSelection("pick-up")}
@@ -636,7 +716,7 @@ const PickUpLocationModal = ({
 }: PickUpLocationModalProps): JSX.Element => {
   return (
     <Modal className={styles.modal} onClose={onClose}>
-      <Title>5. Pick-up Address</Title>
+      <Title>4.1. Pick-up Address</Title>
       <AddressForm onSave={onSelection} />
     </Modal>
   );
