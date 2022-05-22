@@ -208,8 +208,8 @@ const BookRepair = (): JSX.Element => {
       case "phone-screen-color":
         return (
           <PhoneScreenColorModal
-            onSelection={(phoneColor) => {
-              setSelection((cur) => ({ ...cur, phoneScreenColor: phoneColor }));
+            onSelection={(phoneScreenColor) => {
+              setSelection((cur) => ({ ...cur, phoneScreenColor }));
               closeModal();
             }}
             onClose={closeModal}
@@ -529,7 +529,7 @@ const Option = ({
   return (
     <StyledContainer
       className={clsx(styles.optionContainer, {
-        [styles.inset]: inset
+        [styles.inset]: inset,
       })}
       onClick={onClick}
       pressable
@@ -621,7 +621,7 @@ const RepairTypeModal = ({
 
 interface PhoneScreenColorModalProps {
   onClose: () => void;
-  onSelection: (phoneColor: RepairSelection["phoneScreenColor"]) => void;
+  onSelection: (phoneScreenColor: RepairSelection["phoneScreenColor"]) => void;
 }
 
 const PhoneScreenColorModal = ({
