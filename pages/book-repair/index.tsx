@@ -411,7 +411,7 @@ const BookRepair = (): JSX.Element => {
             onClick={() => setModal("pick-up-location")}
           />
         )}
-        <span>{`Total: £${totalPrice}`}</span>
+        <span className={styles.totalPrice}>{`Total: £${totalPrice}`}</span>
         <Caption className={styles.caption}>
           Payment to be taken after satisfactory repair.
         </Caption>
