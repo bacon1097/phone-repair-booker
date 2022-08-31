@@ -69,9 +69,6 @@ const BookRepair = (): JSX.Element => {
     | undefined
   >();
 
-  const [locationRequest, setLocationRequest] = useState(false);
-  const [locationRequestModal, setLocationRequestModal] = useState(false);
-
   // Error message
   const [error, setError] = useState("");
 
@@ -230,33 +227,22 @@ const BookRepair = (): JSX.Element => {
         );
       case "delivery-type":
         return (
-          <>
-            <DeliveryTypeModal
-              onClose={closeModal}
-              onSelection={(deliveryType) => {
-                setSelection((cur) => ({
-                  ...cur,
-                  deliveryType,
-                }));
-                closeModal();
-              }}
-              canDeliver={deliveryCheck.can}
-              deliverMessage={
-                !deliveryCheck.can && deliveryCheck.message
-                  ? " - " + deliveryCheck.message
-                  : ""
-              }
-            />
-            {locationRequestModal && (
-              <LocationRequestModal
-                onClose={() => setLocationRequestModal(false)}
-                onSelection={(resp) => {
-                  setLocationRequest(resp);
-                  setLocationRequestModal(false);
-                }}
-              />
-            )}
-          </>
+          <DeliveryTypeModal
+            onClose={closeModal}
+            onSelection={(deliveryType) => {
+              setSelection((cur) => ({
+                ...cur,
+                deliveryType,
+              }));
+              closeModal();
+            }}
+            canDeliver={deliveryCheck.can}
+            deliverMessage={
+              !deliveryCheck.can && deliveryCheck.message
+                ? " - " + deliveryCheck.message
+                : ""
+            }
+          />
         );
       case "pick-up-location":
         return (
@@ -274,7 +260,7 @@ const BookRepair = (): JSX.Element => {
       default:
         return <></>;
     }
-  }, [modal, closeModal, selection, deliveryCheck, locationRequestModal]);
+  }, [modal, closeModal, selection, deliveryCheck]);
 
   // Check if we can deliver
   const canDeliver = useCallback((userLat: number, userLong: number) => {
@@ -310,7 +296,7 @@ const BookRepair = (): JSX.Element => {
 
   // Check if delivery can be done
   useEffect(() => {
-    if (locationRequest) {
+    if (modal === "delivery-type") {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
           ({ coords: { latitude, longitude } }) => {
@@ -333,14 +319,7 @@ const BookRepair = (): JSX.Element => {
         );
       }
     }
-  }, [locationRequest, canDeliver]);
-
-  // Open location request modal
-  useEffect(() => {
-    if (modal === "delivery-type" && !locationRequest) {
-      setLocationRequestModal(true);
-    }
-  }, [modal, locationRequest]);
+  }, [modal, canDeliver]);
 
   return (
     <>
@@ -739,33 +718,6 @@ const PickUpLocationModal = ({
     <Modal className={styles.modal} onClose={onClose}>
       <Title>4.1. Pick-up Address</Title>
       <AddressForm onSave={onSelection} />
-    </Modal>
-  );
-};
-
-interface LocationRequestModalProps {
-  onClose: () => void;
-  onSelection: (response: boolean) => void;
-}
-
-const LocationRequestModal = ({
-  onClose,
-  onSelection,
-}: LocationRequestModalProps): JSX.Element => {
-  return (
-    <Modal className={styles.modal} onClose={onClose}>
-      <Title>Enable Location</Title>
-      <div className={styles.locationRequestCaption}>
-        <Caption>Enable for pick-up</Caption>
-      </div>
-      <div className={styles.modalButtonContainer}>
-        <Button type="default" onClick={() => onSelection(true)}>
-          Yes
-        </Button>
-        <Button type="default" onClick={() => onSelection(false)}>
-          No
-        </Button>
-      </div>
     </Modal>
   );
 };
