@@ -76,7 +76,7 @@ const BookRepair = (): JSX.Element => {
   const [error, setError] = useState("");
 
   // Can be delivered
-  const [deliveryCheck, setDeliveryCheck] = useState({
+  const [deliveryCheck, setCanDeliver] = useState({
     can: false,
     message: "Enable location",
   });
@@ -286,12 +286,12 @@ const BookRepair = (): JSX.Element => {
     );
 
     if (distanceKm < MAX_PICK_UP_DISTANCE_KM) {
-      setDeliveryCheck({
+      setCanDeliver({
         can: true,
         message: "",
       });
     } else {
-      setDeliveryCheck({
+      setCanDeliver({
         can: false,
         message: "Too far",
       });
@@ -310,27 +310,15 @@ const BookRepair = (): JSX.Element => {
 
   // Check if delivery can be done
   useEffect(() => {
-    async function checkDelivery() {
-      if (!("permissions" in navigator)) {
-        return;
-      }
-
-      const perms = await navigator.permissions.query({
-        name: "geolocation",
-      });
-
-      if (locationRequest || perms.state === "granted") {
-        if (!("geolocation" in navigator)) {
-          return;
-        }
-
+    if (locationRequest) {
+      if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
           ({ coords: { latitude, longitude } }) => {
             canDeliver(latitude, longitude);
           },
           (err) => {
             console.error(err);
-            setDeliveryCheck({
+            setCanDeliver({
               can: false,
               message:
                 err.message === "User denied Geolocation"
@@ -345,28 +333,14 @@ const BookRepair = (): JSX.Element => {
         );
       }
     }
-
-    checkDelivery();
   }, [locationRequest, canDeliver]);
 
   // Open location request modal
   useEffect(() => {
-    async function checkPermissions() {
-      if (!("permissions" in navigator)) {
-        return;
-      }
-
-      const perms = await navigator.permissions.query({
-        name: "geolocation",
-      });
-
-      if (modal === "delivery-type" && perms.state !== "granted") {
-        setLocationRequestModal(true);
-      }
+    if (modal === "delivery-type" && !locationRequest) {
+      setLocationRequestModal(true);
     }
-
-    checkPermissions();
-  }, [modal, deliveryCheck.can]);
+  }, [modal, locationRequest]);
 
   return (
     <>
