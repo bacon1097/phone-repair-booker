@@ -76,7 +76,7 @@ const BookRepair = (): JSX.Element => {
   const [error, setError] = useState("");
 
   // Can be delivered
-  const [deliveryCheck, setCanDeliver] = useState({
+  const [deliveryCheck, setDeliveryCheck] = useState({
     can: false,
     message: "Enable location",
   });
@@ -286,12 +286,12 @@ const BookRepair = (): JSX.Element => {
     );
 
     if (distanceKm < MAX_PICK_UP_DISTANCE_KM) {
-      setCanDeliver({
+      setDeliveryCheck({
         can: true,
         message: "",
       });
     } else {
-      setCanDeliver({
+      setDeliveryCheck({
         can: false,
         message: "Too far",
       });
@@ -310,15 +310,27 @@ const BookRepair = (): JSX.Element => {
 
   // Check if delivery can be done
   useEffect(() => {
-    if (locationRequest) {
-      if ("geolocation" in navigator) {
+    async function checkDelivery() {
+      if (!("permissions" in navigator)) {
+        return;
+      }
+
+      const perms = await navigator.permissions.query({
+        name: "geolocation",
+      });
+
+      if (locationRequest || perms.state === "granted") {
+        if (!("geolocation" in navigator)) {
+          return;
+        }
+
         navigator.geolocation.getCurrentPosition(
           ({ coords: { latitude, longitude } }) => {
             canDeliver(latitude, longitude);
           },
           (err) => {
             console.error(err);
-            setCanDeliver({
+            setDeliveryCheck({
               can: false,
               message:
                 err.message === "User denied Geolocation"
@@ -333,14 +345,28 @@ const BookRepair = (): JSX.Element => {
         );
       }
     }
+
+    checkDelivery();
   }, [locationRequest, canDeliver]);
 
   // Open location request modal
   useEffect(() => {
-    if (modal === "delivery-type" && !locationRequest) {
-      setLocationRequestModal(true);
+    async function checkPermissions() {
+      if (!("permissions" in navigator)) {
+        return;
+      }
+
+      const perms = await navigator.permissions.query({
+        name: "geolocation",
+      });
+
+      if (modal === "delivery-type" && perms.state !== "granted") {
+        setLocationRequestModal(true);
+      }
     }
-  }, [modal, locationRequest]);
+
+    checkPermissions();
+  }, [modal, deliveryCheck.can]);
 
   return (
     <>
