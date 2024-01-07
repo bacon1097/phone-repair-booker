@@ -1,3 +1,10 @@
+# Phone Repair Booker
+
+This application streamlines the process of scheduling repairs, handling customer information, and managing repair services. Built with modern web technologies, it offers a user-friendly interface for both customers and administrators, ensuring a seamless booking experience.
+
+![image](https://github.com/benbrunyee/phone-repair-booker/assets/45962997/d1977aa8-ef7b-408d-97ab-cae95eb41a9c)
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
