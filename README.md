@@ -6,7 +6,7 @@ This application streamlines the process of scheduling repairs, handling custome
 
 [Figma Design File](https://www.figma.com/file/bUWdymatINuDCVyilLs0Gt/App?type=design&node-id=0%3A1&mode=design&t=ddRkq6PBiZBiItFp-1)
 
-![image](https://github.com/benbrunyee/phone-repair-booker/assets/45962997/3b97adb4-ae75-4a8f-854f-5f8b903579db)
+![Figma Design](https://github.com/benbrunyee/phone-repair-booker/assets/45962997/3b97adb4-ae75-4a8f-854f-5f8b903579db)
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
